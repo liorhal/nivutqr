@@ -20,6 +20,15 @@
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\com.android.support-transition-25.1.1_fc7f2714efa08c2d4c9bdaa8b2f3b67f244d0d15.jar" />
     </item>
     <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="02741d05d4b697fba5e279e9881aaa1da0ca7c7f">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-compat-25.1.1_bfc755f9457acc460408f115bf51643f62d3a192\classes.dex" />
+    </item>
+    <item
         is-multidex="false"
         jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.3.0\2b802460eea20f8f2ad9c08c74e0f14718e88aa9\okhttp-3.3.0.jar"
         jumboMode="false"
@@ -27,6 +36,15 @@
         revision="25.0.2"
         sha1="2b802460eea20f8f2ad9c08c74e0f14718e88aa9">
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\okhttp-3.3.0_fb10d21081870a9abb01bdc83a99eba152cb1548.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c9649557905bf7a80fca9e0d54cbcb7662627860">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-25.1.1_0174434e6289e98f08fc50a3725d57fd1198cdad\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -54,6 +72,15 @@
         revision="25.0.2"
         sha1="92c823b391f3efabe774386d7fb67a48fc0f1e93">
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_d4da7379f29cbf05f6ece71a29101e02f0bfb809\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ecb496cc08dd52551fc5ec6db3bc0632e95a89bb">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-25.1.1_91ba4d046fa4ba99e664a68c5e09283058ee4db5\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -110,6 +137,15 @@
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_d4da7379f29cbf05f6ece71a29101e02f0bfb809\classes.dex" />
     </item>
     <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c03bf57f358aa10d253f21989e93bcf6014b3b17">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-25.1.1_c29329af4fa88d761d02fce27083d19254f051db\classes.dex" />
+    </item>
+    <item
         is-multidex="false"
         jar="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.1.1\jars\classes.jar"
         jumboMode="false"
@@ -137,15 +173,6 @@
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-25.1.1_c88e0c805458f0a18537ec177b2ed18686a3cc4a\classes.dex" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\exploded-aar\com.journeyapps\zxing-android-embedded\3.4.0\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="0e1f104cf60bfe34147ef670229f2635789c79a4">
-        <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\com.journeyapps-zxing-android-embedded-3.4.0_2495f8fd75b0d5ea706b2687c4d4d8531dca5aea.jar" />
-    </item>
-    <item
         is-multidex="true"
         jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.google.zxing\core\3.2.1\2287494d4f5f9f3a9a2bb6980e3f32053721b315\core-3.2.1.jar"
         jumboMode="true"
@@ -156,12 +183,30 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\exploded-aar\com.journeyapps\zxing-android-embedded\3.4.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0e1f104cf60bfe34147ef670229f2635789c79a4">
+        <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\com.journeyapps-zxing-android-embedded-3.4.0_2495f8fd75b0d5ea706b2687c4d4d8531dca5aea.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\25.1.1\jars\classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.2"
         sha1="c9649557905bf7a80fca9e0d54cbcb7662627860">
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\com.android.support-recyclerview-v7-25.1.1_146869b2b9a6968ecdddee87f6adf9fe07718390.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\design\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="cd7951e04cfb9a8bf008d544a478d9a8d8192d38">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-25.1.1_0e4367a162c2675f1025ee1fa8e75ff471e09f8c\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -180,6 +225,24 @@
         revision="25.0.2"
         sha1="c03bf57f358aa10d253f21989e93bcf6014b3b17">
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-25.1.1_956d0a7da1a67a59db48fe2f88ec75a07623713f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="7bde4c34162092e0a77e7f12dc85ed77c484cf5c">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-media-compat-25.1.1_8a2164a0fc94b81f404971b13f29c473594109de\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.journeyapps\zxing-android-embedded\3.4.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0e1f104cf60bfe34147ef670229f2635789c79a4">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.journeyapps-zxing-android-embedded-3.4.0_dc9b1f4b854449cdd6c8e24b0e8fff6dfe5ed0d7\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -237,6 +300,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e2719c102dca3a7a5b02ce07f769362da6ddb4ab">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-fragment-25.1.1_20f6948a84f67b7903e6eac7a6ff24ac42344146\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\25.1.1\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -252,6 +324,15 @@
         revision="25.0.1"
         sha1="0e1f104cf60bfe34147ef670229f2635789c79a4">
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.journeyapps-zxing-android-embedded-3.4.0_2495f8fd75b0d5ea706b2687c4d4d8531dca5aea\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0d191c1a09e4892d059e5ce749e4ad4e08129e35">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-25.1.1_6bdd6a54485aa06c0231996b2a905cd5d2827909\classes.dex" />
     </item>
     <item
         is-multidex="true"
@@ -288,6 +369,42 @@
         revision="25.0.2"
         sha1="2de7cd8b95b7021b1d597f049bcb422055119f2c">
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\retrofit-2.1.0_b97ddd24ee891b3696a622f03e196208c6c11365\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.github.deano2390\MaterialShowcaseView\1.1.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="5df25893bd9dc52e46b78f132f2c3232a641c20e">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.github.deano2390-MaterialShowcaseView-1.1.0_d5ae5add42b87935f1ee54bf9f4b8aef305cb59c\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="0fb891e8f0cfba0513043a7bb357513d229ca2cd">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-utils-25.1.1_1a0c17de1f58d40bccc438ffcc2759cd70308160\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="652bc0826a49316c8ddd636f176a22ba16cd7039">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_46b289134e700108199b852043c673f5e14289c8\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-25.1.1_a6eccf621402dfa6bc6cba399f704c15a1b063ca\classes.dex" />
     </item>
     <item
         is-multidex="false"
@@ -344,6 +461,15 @@
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\core-3.2.1_f1ddf7bb02c81b641e72ea8cdf7a53f9699ce4cc\classes.dex" />
     </item>
     <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="3e04ac8ca644ea7baddf6fdcf72e15c79e9df94a">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-ui-25.1.1_50fabd32afc52715031f573da4b55afcd9d95d89\classes.dex" />
+    </item>
+    <item
         is-multidex="false"
         jar="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.1.1\jars\classes.jar"
         jumboMode="false"
@@ -389,6 +515,24 @@
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\core-3.2.1_f1ddf7bb02c81b641e72ea8cdf7a53f9699ce4cc.jar" />
     </item>
     <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b017da0fa520309d3220e74d91d2611d4f5f3261">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_583717ab4bc3a2522be75c5c3b602efe4ed1b389\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\exploded-aar\com.android.support\transition\25.1.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="15b049fedbd8e3926bf99d9e45dfc9b2a1043bb9">
+        <dex dex="C:\Users\owner\Documents\nivutqr\android\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-transition-25.1.1_7c8ca6097cf08893eaefc8ea9f1315e3f14496b5\classes.dex" />
+    </item>
+    <item
         is-multidex="false"
         jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.7\751f548c85fa49f330cecbb1875893f971b33c4e\gson-2.7.jar"
         jumboMode="false"
@@ -407,15 +551,6 @@
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\com.android.support-design-25.1.1_37dc7ff5a353bdbcfa98f87a2c92696912657876.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.1.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.2"
-        sha1="e2719c102dca3a7a5b02ce07f769362da6ddb4ab">
-        <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\com.android.support-support-fragment-25.1.1_b462ee790178dc76527f84c58607bfc3118cb591.jar" />
-    </item>
-    <item
         is-multidex="true"
         jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.8.0\5ea7af56cc7c567ed9856d99efb30740e9b17ff\okio-1.8.0.jar"
         jumboMode="true"
@@ -423,6 +558,15 @@
         revision="25.0.2"
         sha1="05ea7af56cc7c567ed9856d99efb30740e9b17ff">
         <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\okio-1.8.0_a5606aad866e7f2e1382f566dcdd071a620bc650\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.1.1\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e2719c102dca3a7a5b02ce07f769362da6ddb4ab">
+        <dex dex="C:\Users\owner\AndroidStudioProjects\NivutQR\app\build\intermediates\pre-dexed\release\com.android.support-support-fragment-25.1.1_b462ee790178dc76527f84c58607bfc3118cb591.jar" />
     </item>
     <item
         is-multidex="true"
