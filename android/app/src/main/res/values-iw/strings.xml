@@ -1,9 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">NivutQR</string>
-    <string name="lbl_Name" translatable="false">שם</string>
     <string name="lbl_Scan_Checkpoint">סרוק תחנה</string>
     <string name="toast_logged">התחנה נרשמה</string>
     <string name="alert_important_message">הודעה חשובה</string>
     <string name="action_event_details">פרטי האירוע</string>
+    <string name="action_settings">הגדרות</string>
+    <string name="action_event_progress">ההתקדמות שלך</string>
+    <string name="action_event_exit">יציאה</string>
+    <string name="checkpoint_logged">התחנה נרשמה</string>
+    <string name="event_details_first">מוריד את נתוני האירוע</string>
+    <string name="unknown_game">שגיאה: אירוע לא מוכר</string>
+    <string name="participant_exists">המשתמש כבר קיים. לשינוי משתמש - הכנס להגדרות</string>
+    <string name="user_canceled">המשתמש ביטל את הסריקה</string>
+    <string name="hint_name">רשום את שמך</string>
+    <string name="sc_fab">הגעת לתחנה? כל הכבוד! לחץ כאן וסרוק אותה</string>
+    <string name="sc_got_it">הבנתי !</string>
+    <string name="sc_name">ראשית, הקלד את שמך</string>
+    <string name="exit_confirm">רוצה לצאת ?</string>
+    <string name="no">לא</string>
+    <string name="yes">כן</string>
+    <string name="sc_show_me">הראה לי</string>
+    <string name="sc_welcome">ברוכים הבאים ל-NivutQR\nאנחנו נעזור לך להתקדם בניווט</string>
+    <string name="event_name">שם האירוע</string>
+    <string name="organizer">מנהל האירוע</string>
+    <string name="free_order">איסוף חופשי (סקור)</string>
+    <string name="phone">טלפון</string>
+    <string name="time_limit">שעת הגג</string>
+    <string name="err_fill_name">נא להכניס שם</string>
+    <string name="goodluck">צא לדרך! בהצלחה!</string>
+    <string name="event_type">סוג ניווט</string>
+    <string name="by_number">איסוף לפי סדר</string>
 </resources>

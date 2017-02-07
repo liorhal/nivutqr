@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.halachmi.nivutqr"
-        minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        applicationId "halachmi.lior.nivutqr"
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 4
+        versionName "1"
     }
     buildTypes {
         release {
@@ -20,11 +20,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:design:25.1.1'
     // Retrofit & OkHttp
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    //MaterialShowcaseView - https://github.com/deano2390/MaterialShowcaseView
+    compile 'com.github.deano2390:MaterialShowcaseView:1.1.0@aar'
+    //zxing-android-embedded - https://github.com/journeyapps/zxing-android-embedded
+    compile 'com.journeyapps:zxing-android-embedded:3.4.0'
 }

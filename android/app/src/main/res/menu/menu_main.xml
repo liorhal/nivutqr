@@ -1,15 +1,31 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.halachmi.nivutqr.MainActivity">
+    tools:context="halachmi.lior.nivutqr.MainActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:enabled="false"
+        android:icon="@drawable/ic_settings"/>
     <item
         android:id="@+id/action_event_details"
-        android:orderInCategory="101"
+        android:orderInCategory="100"
         android:title="@string/action_event_details"
+        app:showAsAction="always"
+        android:visible="false"
+        android:icon="@drawable/ic_event_details"/>
+    <item
+        android:id="@+id/action_event_progress"
+        android:orderInCategory="100"
+        android:title="@string/action_event_progress"
+        app:showAsAction="always"
+        android:visible="false"
+        android:icon="@drawable/ic_progress"/>
+    <item
+        android:id="@+id/action_exit"
+        android:orderInCategory="100"
+        android:title="@string/action_event_exit"
         app:showAsAction="never" />
 </menu>
