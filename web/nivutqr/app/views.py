@@ -26,7 +26,7 @@ from .nocache import nocache
 @app.route('/')
 def home():
     """Render website's home page."""
-    return render_template('home2.html',
+    return render_template('home.html',
                 title='games',
                 games=Game.query.order_by(Game.game_id).all())
 
