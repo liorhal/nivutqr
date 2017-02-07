@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">NivutQR</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="action_event_details">Event Details</string>
+    <string name="lbl_Name">Name</string>
+    <string name="lbl_Scan_Checkpoint">Scan Checkpoint</string>
+    <string name="toast_logged">Your checkpoint logged</string>
+    <string name="alert_important_message">Important Message</string>
+</resources>

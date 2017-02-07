@@ -1,0 +1,40 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - NivutQR</title>
+    {% else %}
+    <title>Welcome to NivutQR</title>
+    {% endif %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+  </head>
+  <body>
+
+        <form action="" method="post" name="myform" id="myform">
+            <p>
+                {{ question }}<br>
+                <table>
+                {% for subfield in form.answers %}
+                <tr>
+                    <td>{{ subfield }}</td>
+                    <td>{{ subfield.label }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            <p><input type="submit" value="Answer" id="submit"></p>
+        </form>
+
+    </body>
+</html>
+
+<script>
+    $( document ).ready(function() {
+        $('input[type=radio][name=answers]').change(function() {
+        $('#myform').attr('action','answer/'+this.value );
+        });
+        $('input[type=radio][name="answers"]').filter('[id="answers-0"]').attr('checked', true);
+    });
+</script>
+

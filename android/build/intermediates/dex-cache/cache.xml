@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.squareup.okio\okio\1.8.0\5ea7af56cc7c567ed9856d99efb30740e9b17ff\okio-1.8.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="05ea7af56cc7c567ed9856d99efb30740e9b17ff">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\okio-1.8.0_a5606aad866e7f2e1382f566dcdd071a620bc650\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit2\converter-gson\2.1.0\aa557d71ead91cbf26e0c316a0f593d168303309\converter-gson-2.1.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="aa557d71ead91cbf26e0c316a0f593d168303309">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\converter-gson-2.1.0_4d0b77b39b45ff3a25529b360426816843970676\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.squareup.okhttp3\okhttp\3.3.0\2b802460eea20f8f2ad9c08c74e0f14718e88aa9\okhttp-3.3.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="2b802460eea20f8f2ad9c08c74e0f14718e88aa9">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\okhttp-3.3.0_fb10d21081870a9abb01bdc83a99eba152cb1548\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.squareup.retrofit2\retrofit\2.1.0\2de7cd8b95b7021b1d597f049bcb422055119f2c\retrofit-2.1.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="2de7cd8b95b7021b1d597f049bcb422055119f2c">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\retrofit-2.1.0_b97ddd24ee891b3696a622f03e196208c6c11365\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\Documents\NivutQR\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="e7262adecfc38b92b37f11494b71ed794a84eb2f">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_338f342392c68ef11e0ef85358204e09b1ec8c5c\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\Documents\NivutQR\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-23.1.1_63b9059a1109d917bc64f3f6565a88a286bdc675\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-23.1.1_c0378376c71a3c4f676c45706ce844cf67c8c950\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\Documents\NivutQR\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="93cddbaa4a6fc7e6001bdfa3640d21783e36746e">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_57433de0202593c0854ba0889bb120f1f42e2599\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\Documents\NivutQR\app\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-23.1.1_198a7fad31deea8e5c4f41d37e9a9ebd1db1ff22\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.7\751f548c85fa49f330cecbb1875893f971b33c4e\gson-2.7.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\gson-2.7_659e1a3de3be7795a54a6c94bb01e6753db941a3\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\Documents\NivutQR\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\libs\internal_impl-23.1.1.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\internal_impl-23.1.1_c342e55f5b6e55a506bf448a49aaf052a9937476\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\Documents\NivutQR\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.1.1\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="5c5699834e9722f1c288fea2de82725d078ba127">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-23.1.1_16361649780f47095766870961663e22cdf79a57\classes.dex" />
+    </item>
+    <item
+        jar="C:\Users\owner\Documents\NivutQR\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="C:\Users\owner\Documents\NivutQR\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-23.1.1_ed849b3d040fce53f04b50aff7a9b9423ec656eb\classes.dex" />
+    </item>
+
+</items>

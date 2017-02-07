@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NivutQR</string>
+    <string name="lbl_Name" translatable="false">שם</string>
+    <string name="lbl_Scan_Checkpoint">סרוק תחנה</string>
+    <string name="toast_logged">התחנה נרשמה</string>
+    <string name="alert_important_message">הודעה חשובה</string>
+    <string name="action_event_details">פרטי האירוע</string>
+</resources>

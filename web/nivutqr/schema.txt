@@ -1,0 +1,83 @@
+user
+	id
+	login
+	pass
+	created_date
+
+game
+	id
+	name
+	user_id
+	is_questions
+	is_freeorder
+	last_played
+	created_date
+
+checkpoint
+	id
+	game_id
+	number
+	is_finish
+	is_start
+	question
+	options
+	answer
+
+log
+	id
+	participant_name
+	checkpoint_id
+	punch_time
+	answer
+	
+	
+CREATE TABLE public.nqr_user (
+  user_id INTEGER DEFAULT nextval('public.nqr_user_user_id_seq'::text::regclass) NOT NULL,
+  login VARCHAR(255) NOT NULL,
+  password VARCHAR(50) NOT NULL,
+  first_name VARCHAR(50),
+  last_name VARCHAR(50),
+  email VARCHAR(50),
+  phone VARCHAR(50)
+  created_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT now() NOT NULL,
+  CONSTRAINT nqr_user_pkey PRIMARY KEY(user_id)
+);
+
+CREATE TABLE public.nqr_game (
+  game_id INTEGER DEFAULT nextval('public.nqr_game_game_id_seq'::text::regclass) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  user_id INTEGER NOT NULL,
+  is_questions BOOLEAN NOT NULL,
+  is_freeorder BOOLEAN NOT NULL,
+  created_date TIMESTAMP(0) WITH TIME ZONE DEFAULT now() NOT NULL,
+  last_played TIMESTAMP(0) WITH TIME ZONE,
+  message VARCHAR(255),
+  message_timestamp TIMESTAMP(0) WITH TIME ZONE,
+  CONSTRAINT nqr_game_pkey PRIMARY KEY(game_id),
+  CONSTRAINT nqr_game_fk FOREIGN KEY (user_id)
+    REFERENCES public.nqr_user(user_id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE
+);
+
+CREATE TABLE public.nqr_checkpoint (
+  checkpoint_id INTEGER DEFAULT nextval('public.nqr_checkpoint_checkpoint_id_seq'::text::regclass) NOT NULL,
+  game_id INTEGER NOT NULL,
+  number INTEGER NOT NULL,
+  is_start BOOLEAN NOT NULL,
+  is_finish BOOLEAN NOT NULL,
+  question VARCHAR(255) NOT NULL,
+  options VARCHAR(255) NOT NULL,
+  answer VARCHAR(255) NOT NULL,
+  CONSTRAINT nqr_checkpoint_pkey PRIMARY KEY(checkpoint_id)
+);
+
+CREATE TABLE public.nqr_log (
+  log_id INTEGER DEFAULT nextval('public.nqr_log_log_id_seq'::text::regclass) NOT NULL,
+  checkpoint_id INTEGER NOT NULL,
+  punch_time TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT now() NOT NULL,
+  answer VARCHAR(255),
+  participant VARCHAR(255),
+  CONSTRAINT nqr_log_pkey PRIMARY KEY(log_id)
+);

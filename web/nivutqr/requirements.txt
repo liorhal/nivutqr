@@ -1,0 +1,22 @@
+# ----------------------
+# Flask
+# ----------------------
+flask
+flask_sqlalchemy
+psycopg2
+datetime
+flask_wtf
+wtforms
+
+
+# ----------------------
+# Testing
+# ----------------------
+mock
+
+
+# ----------------------
+# Production Server
+# ----------------------
+gevent
+gunicorn

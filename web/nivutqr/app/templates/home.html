@@ -1,0 +1,54 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - NivutQR</title>
+    {% else %}
+    <title>Welcome to NivutQR</title>
+    {% endif %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+      <script src="https://momentjs.com/downloads/moment.min.js"></script>
+      <script>
+          function MyFunction() {
+ if (window.confirm('Really go to another page?'))
+ {
+   alert("You agree")
+   window.location.href = 'http:///mediclaim_portal/logout2.php';
+ }
+}
+      </script>
+  </head>
+  <body>
+    <div class="container">
+    <table class='table table-bordered table-striped sortable'>
+        <thead>
+      <tr>
+        <th style="width: 20%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">ID</th>
+        <th style="width: 20%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Name</th>
+        <th style="width: 20%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Questions</th>
+        <th style="width: 20%; vertical-align: middle; align:center;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Score(Free Order)</th>
+        <th style="width: 20%; vertical-align: middle; align:center;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Checkpoints</th>
+        <th style="width: 20%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Time Limit</th>
+        <th style="width: 20%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Results</th>
+        <th style="width: 20%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Clear</th>
+      </tr>
+      </thead>
+      {% for game in games %}
+      <tr>
+        <td><a href="/game/{{game.game_id}}">{{game.game_id}}</a></td>
+        <td><a href="/game/{{game.game_id}}">{{game.name}}</a></td>
+        <td align="center">{%- if game.is_questions -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
+        <td align="center">{%- if game.is_freeorder -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
+        <td><a href="/game/{{game.game_id}}/checkpoints">{{ game.checkpoints.count() }}</a></td>
+        <td>{{ game.time_limit }}</td>
+        <td><a href="/game/{{game.game_id}}/results">Results</a></td>
+        <td><a align="center" type=button value="Clear" onClick="if(confirm('Clear the game results?'))
+                                document.location.href = '/game/{{game.game_id}}/clear';"><span class="glyphicon glyphicon-trash" /></a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  </body>
+</html>
