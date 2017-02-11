@@ -53,8 +53,32 @@ class Checkpoint(db.Model):
 
     logs = db.relationship('Log', backref='checkpoint', lazy='dynamic')
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'checkpoint_id': self.checkpoint_id,
+            'number': self.number,
+            'question': self.question,
+            'options': self.options,
+            'answer': self.answer
+            #'modified_at': dump_datetime(self.modified_at),
+            # This is an example how to deal with Many2Many relations
+            #'many2many': self.serialize_many2many
+        }
+
+    #@property
+    #def serialize_many2many(self):
+    #    """
+    #    Return object's relations in easily serializeable format.
+    #    NB! Calls many2many's serialize property.
+    #    """
+    #    return [item.serialize for item in self.many2many]
+
     def __repr__(self):
         return self.number
+
+
 
 
 class Log(db.Model):
@@ -68,3 +92,9 @@ class Log(db.Model):
 
     def __repr__(self):
         return self.participant%'/'%Log.checkpoint.number
+
+def dump_datetime(value):
+    """Deserialize datetime object into string form for JSON processing."""
+    if value is None:
+        return None
+    return [value.strftime("%Y-%m-%d"), value.strftime("%H:%M:%S")]

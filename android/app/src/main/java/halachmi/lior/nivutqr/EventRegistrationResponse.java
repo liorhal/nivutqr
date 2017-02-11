@@ -2,6 +2,7 @@ package halachmi.lior.nivutqr;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.IdentityHashMap;
 
 public class EventRegistrationResponse {
 
@@ -12,6 +13,7 @@ public class EventRegistrationResponse {
     private String phone;
     private Date time_limit;
     private String error;
+    private PunchResponse[] checkpoints;
 
     public EventRegistrationResponse() {
     }

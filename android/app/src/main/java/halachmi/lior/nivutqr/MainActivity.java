@@ -1,5 +1,8 @@
 package halachmi.lior.nivutqr;
 
+import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
@@ -7,12 +10,14 @@ import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,11 +54,12 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 
-public class MainActivity extends AppCompatActivity implements QuestionDialogFragment.QuestionDialogListener{
+public class MainActivity extends AppCompatActivity implements QuestionDialogFragment.QuestionDialogListener {
 
-    static final String SHOWCASEVIEW_ID = "materialshowcaseview_id";
+    static final String SHOWCASEVIEW_ID = "welcome_id";
 
     static final String API_BASE_URL = "https://nivutqr.herokuapp.com/";
+    static final int MY_PERMISSIONS_REQUEST_GET_ACCOUNTS = 1;
 
     private Handler mHandler;
 
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
 
     EventRegistrationResponse event_details = null;
 
-    boolean debugMode = false;
+    boolean debugMode = true;
     String debug_content = "{\"game\": \"8\",\"checkpoint\": \"17\"}";
 
     private boolean mIsInForegroundMode = false;
@@ -124,6 +130,44 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
         setupUIEvent();
 
         showMaterialShowcaseview();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.GET_ACCOUNTS},
+                    MY_PERMISSIONS_REQUEST_GET_ACCOUNTS);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_GET_ACCOUNTS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED) {
+                    AccountManager manager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+                    Account[] list = manager.getAccounts();
+                    for(Account account: list)
+                    {
+                        if(account.type.equalsIgnoreCase("com.google"))
+                        {
+                            String[] email_parts = account.name.split("@");
+                            if (email_parts.length > 0 && email_parts[0] != null) {
+                                TextView nameTextView = (TextView) findViewById(R.id.text_name);
+                                nameTextView.setText(email_parts[0]);
+
+                            }
+                            break;
+                        }
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+        }
     }
 
     void showMaterialShowcaseview(){
@@ -138,16 +182,13 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
 
         sequence.addSequenceItem(
                 new MaterialShowcaseView.Builder(this)
-                        .setTarget(findViewById(R.id.invisible_button))
-                        .setDismissText(getString(R.string.sc_show_me))
+                        .setTarget(findViewById(R.id.fab))
+                        .setDismissText(getString(R.string.sc_got_it))
                         .setContentText(getString(R.string.sc_welcome))
-                        .setShapePadding(0)
                         .setDismissOnTouch(true)
                         .singleUse(SHOWCASEVIEW_ID)
                         .build()
         );
-        sequence.addSequenceItem(findViewById(R.id.fab),
-                getString(R.string.sc_fab), getString(R.string.sc_got_it));
 
         sequence.start();
     }
@@ -242,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
             } finally {
                 // 100% guarantee that this always happens, even if
                 // your update method throws an exception
-                mHandler.postDelayed(mMessageChecker, 60*1000);
+                mHandler.postDelayed(mMessageChecker, 120*1000);
             }
         }
     };
@@ -538,7 +579,7 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
         WebView webView = (WebView) findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webView.loadUrl("https://nivutqr.herokuapp.com/game/"+game+"/participant/"+name);
+        webView.loadUrl(API_BASE_URL + "game/"+game+"/participant/"+name);
     }
 
     @Override

@@ -14,14 +14,13 @@
     <string name="participant_exists">המשתמש כבר קיים. לשינוי משתמש - הכנס להגדרות</string>
     <string name="user_canceled">המשתמש ביטל את הסריקה</string>
     <string name="hint_name">רשום את שמך</string>
-    <string name="sc_fab">הגעת לתחנה? כל הכבוד! לחץ כאן וסרוק אותה</string>
     <string name="sc_got_it">הבנתי !</string>
     <string name="sc_name">ראשית, הקלד את שמך</string>
     <string name="exit_confirm">רוצה לצאת ?</string>
     <string name="no">לא</string>
     <string name="yes">כן</string>
     <string name="sc_show_me">הראה לי</string>
-    <string name="sc_welcome">ברוכים הבאים ל-NivutQR\nאנחנו נעזור לך להתקדם בניווט</string>
+    <string name="sc_welcome">ברוכים הבאים ל-NivutQR\nאנחנו נעזור לך להתקדם בניווט\n\nהגעת לתחנה? כל הכבוד! לחץ כאן וסרוק אותה</string>
     <string name="event_name">שם האירוע</string>
     <string name="organizer">מנהל האירוע</string>
     <string name="free_order">איסוף חופשי (סקור)</string>

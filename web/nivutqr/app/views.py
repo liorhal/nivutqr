@@ -10,7 +10,7 @@ from time import strftime
 
 from flask import render_template, jsonify, Response
 from sqlalchemy import true, false, func
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, load_only
 
 from .models import Game, Checkpoint, User, Log
 from .forms import MyForm,MyQForm
@@ -136,40 +136,63 @@ def clear_game(game_id):
 @nocache
 def register(game_id, participant):
     cps = Checkpoint.query.with_entities(Checkpoint.checkpoint_id).filter(Checkpoint.game_id == game_id)
-    logs = Log.query.filter(Log.checkpoint_id.in_(cps)).filter(Log.participant == participant)
-    logCounter = 0;
-    for log in logs:
-        logCounter = logCounter+1
+    logCount = db.session.query(func.count(Log.log_id)).filter(Log.checkpoint_id.in_(cps), Log.participant == participant)
     g = Game.query.get(game_id);
-    if logCounter == 0:
-        if g:
-            u = User.query.get(g.user_id)
-            json = jsonify({'game': game_id,
-                            'game_name': g.name,
-                            'freeorder': g.is_freeorder,
-                            'time_limit': g.time_limit.strftime("%Y-%m-%dT'%H:%M:%S"),
-                            'organizer':u.first_name + " " + u.last_name,
-                            'phone':u.phone,
-                            'error':''
-                            })
-        else:
-            json = jsonify({'error': "unknown game"})
-    else:
+    error = ''
+    if logCount.scalar() > 0:
+        error = 'participant exists'
+    if g:
         u = User.query.get(g.user_id)
+        #cps_list = [value for value in cps]
+        #cps_questions = [value for value in Checkpoint.query.with_entities(Checkpoint.question).filter(Checkpoint.game_id == game_id)]
         json = jsonify({'game': game_id,
                         'game_name': g.name,
                         'freeorder': g.is_freeorder,
-                        'time_limit': g.time_limit.strftime("%Y-%m-%dT%H:%M:%S"),
-                        'organizer': u.first_name + " " + u.last_name,
-                        'phone': u.phone,
-                        'error': 'participant exists'
+                        'time_limit': g.time_limit.strftime("%Y-%m-%dT'%H:%M:%S"),
+                        'organizer':u.first_name + " " + u.last_name,
+                        'phone':u.phone,
+                        'error':error
                         })
+    else:
+        json = jsonify({'error': "unknown game"})
 
     response = Response(json.data)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.mimetype = 'application/json'
 
     return response
+
+@app.route('/game/<string:game_id>/participant/<string:participant>/register2')
+@nocache
+def register(game_id, participant):
+    cps = Checkpoint.query.filter(Checkpoint.game_id == game_id)
+    logCount = db.session.query(func.count(Log.log_id)).filter(Log.checkpoint_id.in_(cps.with_entities(Checkpoint.checkpoint_id)), Log.participant == participant)
+    g = Game.query.get(game_id);
+    error = ''
+    if logCount.scalar() > 0:
+        error = 'participant exists'
+    if g:
+        u = User.query.get(g.user_id)
+        cps_list = [value for value in cps]
+        cps_questions = [value for value in Checkpoint.query.with_entities(Checkpoint.question).filter(Checkpoint.game_id == game_id)]
+        json1 = jsonify({'game': game_id,
+                        'game_name': g.name,
+                        'freeorder': g.is_freeorder,
+                        'time_limit': g.time_limit.strftime("%Y-%m-%dT'%H:%M:%S"),
+                        'organizer':u.first_name + " " + u.last_name,
+                        'phone':u.phone,
+                        'error':error,
+                        'checkpoints': [cp.serialize for cp in cps.all()]
+                        })
+    else:
+        json1 = jsonify({'error': "unknown game"})
+
+    response = Response(json1.data)
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.mimetype = 'application/json'
+
+    return response
+
 
 @app.route('/game/<string:game_id>/message')
 @nocache
@@ -191,7 +214,7 @@ def get_message(game_id):
 @nocache
 def show_participant_progress(game_id, participant):
     cps = Checkpoint.query.with_entities(Checkpoint.checkpoint_id).filter(Checkpoint.game_id == game_id)
-    logs = Log.query.filter(Log.checkpoint_id.in_(cps)).filter(Log.participant == participant).order_by(Log.participant)
+    logs = Log.query.filter(Log.checkpoint_id.in_(cps)).filter(Log.participant == participant).order_by(Log.punch_time.desc())
     return render_template('progress.html',
                            title = 'progress',
                            logs = logs,

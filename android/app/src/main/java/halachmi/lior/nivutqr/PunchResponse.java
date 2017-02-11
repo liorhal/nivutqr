@@ -1,14 +1,15 @@
 package halachmi.lior.nivutqr;
 
 public class PunchResponse {
-    private int game;
-    private int checkpoint;
+    private int game_id;
+    private int checkpoint_id;
     private int number;
     private boolean is_start;
     private boolean is_finish;
 
     private String question;
     private String options;
+    private String answer;
 
     public PunchResponse() {
     }
@@ -26,11 +27,11 @@ public class PunchResponse {
     }
 
     public int getGame() {
-        return game;
+        return game_id;
     }
 
     public int getCheckpoint() {
-        return checkpoint;
+        return checkpoint_id;
     }
 
     public String getQuestion() {
@@ -45,5 +46,9 @@ public class PunchResponse {
 
     public String getOptions() {
         return options;
+    }
+
+    public String getAnswer() {
+        return answer;
     }
 }
