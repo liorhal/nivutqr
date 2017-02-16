@@ -32,7 +32,7 @@
         <td><a href="/game/{{game.game_id}}">{{game.name}}</a></td>
         <td align="center">{%- if game.is_questions -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
         <td align="center">{%- if game.is_freeorder -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
-        <td><a href="/game/{{game.game_id}}/checkpoints">{{ game.checkpoints.count() }}</a></td>
+        <td><a href="/game/{{game.game_id}}/checkpoint/all">{{ game.checkpoints.count() }}</a></td>
         <td>{{ game.time_limit }}</td>
         <td><a href="/game/{{game.game_id}}/results">Results</a></td>
         <td><a align="center" type=button value="Clear" onClick="if(confirm('Clear the game results?'))

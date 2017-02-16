@@ -1,0 +1,35 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - NivutQR</title>
+    {% else %}
+    <title>Welcome to NivutQR</title>
+    {% endif %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+      <script src="https://momentjs.com/downloads/moment.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <table class='table table-bordered table-striped'>
+      <tr>
+        <td align="center"></td>
+        <td align="center">QR</td>
+        <td align="center"></td>
+      </tr>
+      <tr>
+        <td align="center" style="vertical-align: middle;">{%- if previous_checkpoint -%}<a href="/game/{{ game_id }}/checkpoint/{{ previous_checkpoint.checkpoint_id }}/qr" />Previous</a>{% endif %}</td>
+        <td align="center"><img src="{{ 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={game: ' ~ game_id ~ ',checkpoint: ' ~ checkpoint.checkpoint_id ~ '}' }}" alt="qr"></td>
+        <td align="center" style="vertical-align: middle;">{%- if next_checkpoint -%}<a href="/game/{{ game_id }}/checkpoint/{{ next_checkpoint.checkpoint_id }}/qr" />Next</a>{% endif %}</td>
+      </tr>
+            <tr>
+        <td></td>
+        <td align="center">{{ checkpoint.number }}</td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+  </body>
+</html>

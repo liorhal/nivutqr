@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip"
+    android:id="@+id/simple_list_item"
+    android:animateLayoutChanges="true">
+
+    <TextView
+        android:background="@color/colorAccent"
+        android:id="@+id/firstLine"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        android:layout_above="@+id/secondLine"
+        android:layout_toEndOf="@+id/number"
+        android:layout_toStartOf="@+id/icon"
+        android:textAlignment="center"
+        android:text="Punch Time"
+        android:layout_toRightOf="@+id/number"
+        android:layout_toLeftOf="@+id/icon" />
+
+    <TextView
+        android:id="@+id/secondLine"
+        android:layout_width="fill_parent"
+        android:layout_height="26dip"
+        android:layout_alignParentBottom="true"
+        android:ellipsize="marquee"
+        android:maxLines="1"
+        android:textSize="12sp"
+        android:layout_alignStart="@id/firstLine"
+        android:layout_alignEnd="@id/firstLine"
+        android:layout_alignLeft="@id/firstLine"
+        android:layout_alignRight="@id/firstLine" />
+
+    <TextView
+        android:id="@+id/number"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:background="@color/colorAccent"
+        android:padding="@dimen/circle_radius"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="3"
+        android:textStyle="normal|bold"
+        android:textScaleX="2"/>
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="test"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

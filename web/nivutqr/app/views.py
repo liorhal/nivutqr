@@ -8,7 +8,7 @@ This file creates your application.
 from operator import or_
 from time import strftime
 
-from flask import render_template, jsonify, Response
+from flask import render_template, jsonify, Response, session, request, flash
 from sqlalchemy import true, false, func
 from sqlalchemy.orm import aliased, load_only
 
@@ -25,11 +25,32 @@ from .nocache import nocache
 
 @app.route('/')
 def home():
-    """Render website's home page."""
-    return render_template('home.html',
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return render_template('home.html',
                 title='games',
-                games=Game.query.order_by(Game.game_id).all())
+                games=Game.query.filter(Game.user_id == session['user_id']).order_by(Game.game_id).all())
 
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    POST_LOGIN = str(request.form['login'])
+    POST_PASSWORD = str(request.form['password'])
+
+    query = User.query.filter(User.login.in_([POST_LOGIN]), User.password.in_([POST_PASSWORD]))
+    result = query.first()
+    if result:
+        session['logged_in'] = True
+        session['user_id'] = result.user_id
+    else:
+        flash('wrong password!')
+    return home()
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    session['user_id'] = None
+    return home()
 
 @app.route('/about/')
 def about():
@@ -55,7 +76,7 @@ def punch_with_answer(game_id, checkpoint_id, participant_name, answer):
     db.session.commit()
 
     json = jsonify({'status': 'done',
-                    'id': checkpoint_id})
+                    'checkpoint_id': checkpoint_id})
     response = Response(json.data)
     return response
 
@@ -98,11 +119,23 @@ def show_game_progress(game_id):
                            logs = logs,
                            game = g)
 
-@app.route('/game/<string:game_id>/checkpoints')
+@app.route('/game/<string:game_id>/checkpoint/all')
 def show_game_checkpoints(game_id):
     return render_template('checkpoints.html',
                 title='checkpoints',
                 checkpoints = Checkpoint.query.filter(Checkpoint.game_id == game_id).order_by(Checkpoint.number),
+                game_id = game_id)
+
+@app.route('/game/<string:game_id>/checkpoint/<string:checkpoint_id>/qr')
+def show_qr(game_id, checkpoint_id):
+    cp = Checkpoint.query.get(checkpoint_id);
+    prev = Checkpoint.query.filter(Checkpoint.game_id == game_id).filter(Checkpoint.number == cp.number - 1).first();
+    next = Checkpoint.query.filter(Checkpoint.game_id == game_id).filter(Checkpoint.number == cp.number + 1).first();
+    return render_template('qr.html',
+                title='qr',
+                checkpoint = cp,
+                previous_checkpoint = prev,
+                next_checkpoint = next,
                 game_id = game_id)
 
 @app.route('/game/<string:game_id>/results')
@@ -132,36 +165,6 @@ def clear_game(game_id):
     response = Response()
     return response
 
-@app.route('/game/<string:game_id>/participant/<string:participant>/register')
-@nocache
-def register(game_id, participant):
-    cps = Checkpoint.query.with_entities(Checkpoint.checkpoint_id).filter(Checkpoint.game_id == game_id)
-    logCount = db.session.query(func.count(Log.log_id)).filter(Log.checkpoint_id.in_(cps), Log.participant == participant)
-    g = Game.query.get(game_id);
-    error = ''
-    if logCount.scalar() > 0:
-        error = 'participant exists'
-    if g:
-        u = User.query.get(g.user_id)
-        #cps_list = [value for value in cps]
-        #cps_questions = [value for value in Checkpoint.query.with_entities(Checkpoint.question).filter(Checkpoint.game_id == game_id)]
-        json = jsonify({'game': game_id,
-                        'game_name': g.name,
-                        'freeorder': g.is_freeorder,
-                        'time_limit': g.time_limit.strftime("%Y-%m-%dT'%H:%M:%S"),
-                        'organizer':u.first_name + " " + u.last_name,
-                        'phone':u.phone,
-                        'error':error
-                        })
-    else:
-        json = jsonify({'error': "unknown game"})
-
-    response = Response(json.data)
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.mimetype = 'application/json'
-
-    return response
-
 @app.route('/game/<string:game_id>/participant/<string:participant>/register2')
 @nocache
 def register(game_id, participant):
@@ -172,13 +175,14 @@ def register(game_id, participant):
     if logCount.scalar() > 0:
         error = 'participant exists'
     if g:
+        if g.time_limit == None:
+            g.time_limit = datetime.strptime("2000-1-1T'00:00:00", "%Y-%m-%d'T%H:%M:%S")
         u = User.query.get(g.user_id)
-        cps_list = [value for value in cps]
-        cps_questions = [value for value in Checkpoint.query.with_entities(Checkpoint.question).filter(Checkpoint.game_id == game_id)]
         json1 = jsonify({'game': game_id,
                         'game_name': g.name,
                         'freeorder': g.is_freeorder,
-                        'time_limit': g.time_limit.strftime("%Y-%m-%dT'%H:%M:%S"),
+                        'questions': g.is_questions,
+                        'time_limit': g.time_limit.strftime('%Y-%m-%d %H:%M:%S'),
                         'organizer':u.first_name + " " + u.last_name,
                         'phone':u.phone,
                         'error':error,
@@ -193,21 +197,29 @@ def register(game_id, participant):
 
     return response
 
-
-@app.route('/game/<string:game_id>/message')
+@app.route('/game/<string:game_id>/participant/<string:participant>/message')
 @nocache
-def get_message(game_id):
+def get_message(game_id, participant):
     try:
         g = Game.query.get(game_id)
         json = jsonify({'game': g.game_id,
-                        'message': g.message})
-    except:
-        json = jsonify({'game': game_id,
                         'message': ''})
-    response = Response(json.data)
+        send = False;
+        if 'private:' in g.message:
+            if participant in g.message:
+                send = True;
+        else:
+            send = True;
+        if send:
+            json = jsonify({'game': g.game_id,
+                            'message': g.message})
+        response = Response(json.data)
+    except:
+        response = Response(json.data)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.mimetype = 'application/json'
     return response
+
 
 
 @app.route('/game/<string:game_id>/participant/<string:participant>')
