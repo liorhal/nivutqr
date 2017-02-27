@@ -9,7 +9,7 @@
     <string name="action_event_exit">Exit</string>
     <string name="event_details_first">Getting the event details first</string>
     <string name="user_canceled">User Canceled</string>
-    <string name="participant_exists">participant name exists.\nYou can change in Settings</string>
+    <string name="participant_exists">participant name exists.\nLoading previous punches</string>
     <string name="unknown_game">Error: unknown game!</string>
     <string name="checkpoint_logged">your checkpoint logged</string>
     <string name="hint_name">Your Name</string>

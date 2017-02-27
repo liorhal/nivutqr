@@ -16,19 +16,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-class PunchAdapter extends ArrayAdapter<Punch> {
+class PunchAdapter extends ArrayAdapter<Log> {
     private final Context context;
-    private final ArrayList<Punch> punches;
+    private final ArrayList<Log> logs;
 
-    PunchAdapter(Context context, ArrayList<Punch> punches) {
-        super(context, -1, punches);
+    PunchAdapter(Context context, ArrayList<Log> logs) {
+        super(context, -1, logs);
         this.context = context;
-        this.punches = punches;
+        this.logs = logs;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Collections.sort(punches, new PunchComparator());
+        Collections.sort(logs, new LogComparator());
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -38,25 +38,30 @@ class PunchAdapter extends ArrayAdapter<Punch> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         TextView number = (TextView) rowView.findViewById(R.id.number);
 
-        String answer = punches.get(position).getAnswer();
+        String answer = logs.get(position).getAnswer();
+        boolean synced = logs.get(position).getSynced();
         DateFormat formatter = SimpleDateFormat.getTimeInstance();
-        String dateFormatted = formatter.format(punches.get(position).getPunch_time());
-        number.setText(String.valueOf(punches.get(position).checkpoint.getNumber()));
+        String dateFormatted = formatter.format(logs.get(position).getPunch_time());
+        number.setText(String.valueOf(logs.get(position).getCheckpoint().getNumber()));
         firstLine.setText(dateFormatted);
-        if (!answer.equals("")){
-            secondLine.setText("Answered " + answer);
+        if (answer != null && !answer.equals("")){
+            secondLine.setText("Answered " + answer + ".");
         }
 
         // change the icon
-        if (answer.equals("")){
+        if (answer != null && answer.equals("")){
             imageView.setImageResource(R.mipmap.ic_launcher);
         }
         else {
-            if (punches.get(position).getAnswer().equals(punches.get(position).getCheckpoint().getAnswer())) {
+            if (answer != null && logs.get(position).getAnswer().equals(logs.get(position).getCheckpoint().getAnswer())) {
                 imageView.setImageResource(R.mipmap.ic_correct);
             } else {
                 imageView.setImageResource(R.mipmap.ic_wrong);
             }
+        }
+
+        if (MainActivity.unsynced && !synced){
+            secondLine.setText(secondLine.getText() + " NOT SYNCED");
         }
 
         Animation animation = AnimationUtils
@@ -67,9 +72,9 @@ class PunchAdapter extends ArrayAdapter<Punch> {
     }
 }
 
-class PunchComparator implements Comparator<Punch>
+class LogComparator implements Comparator<Log>
 {
-    public int compare(Punch left, Punch right) {
+    public int compare(Log left, Log right) {
         return right.getPunch_time().compareTo(left.getPunch_time());
     }
 }

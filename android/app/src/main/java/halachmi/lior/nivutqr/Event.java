@@ -1,9 +1,6 @@
 package halachmi.lior.nivutqr;
 
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public class Event {
 
@@ -16,6 +13,7 @@ public class Event {
     private String time_limit;
     private String error;
     private Checkpoint[] checkpoints;
+    private Log[] logs;
 
     public Event() {
     }
@@ -55,5 +53,9 @@ public class Event {
 
     public Checkpoint[] getCheckpoints() {
         return checkpoints;
+    }
+
+    public Log[] getLogs() {
+        return logs;
     }
 }

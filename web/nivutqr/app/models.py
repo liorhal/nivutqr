@@ -1,5 +1,4 @@
 import datetime
-
 from app import db
 
 
@@ -18,6 +17,22 @@ class User(db.Model):
 
     def __repr__(self):
         return self.login
+
+    def __init__(self , login ,password):
+        self.username = login
+        self.password = password
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return self.user_id
 
 class Game(db.Model):
     __tablename__ = 'nqr_game'
@@ -92,6 +107,19 @@ class Log(db.Model):
 
     def __repr__(self):
         return self.participant%'/'%Log.checkpoint.number
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'checkpoint_id': self.checkpoint_id,
+            'punch_time': self.punch_time.strftime('%Y-%m-%d %H:%M:%S'),
+            'participant': self.participant,
+            'answer': self.answer
+            # 'modified_at': dump_datetime(self.modified_at),
+            # This is an example how to deal with Many2Many relations
+            # 'many2many': self.serialize_many2many
+        }
 
 def dump_datetime(value):
     """Deserialize datetime object into string form for JSON processing."""

@@ -30,7 +30,7 @@ public class Checkpoint {
         return game_id;
     }
 
-    public int getCheckpoint() {
+    public int getCheckpoint_id() {
         return checkpoint_id;
     }
 

@@ -3,6 +3,7 @@
 # ----------------------
 flask
 flask_sqlalchemy
+flask-login
 psycopg2
 datetime
 flask_wtf

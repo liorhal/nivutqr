@@ -5,19 +5,21 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface NivutQrApi {
-    @GET("/game/{game}/checkpoint/{checkpoint}/participant/{participant}/punch")
+    @GET("/game/{game}/checkpoint/{checkpoint}/participant/{participant}/punch/{punch_time}")
     Call<Checkpoint> punch(
             @Path("participant") String participant,
             @Path("checkpoint") int checkpoint,
-            @Path("game") int game
+            @Path("game") int game,
+            @Path("punch_time") String punch_time
     );
 
-    @GET("/game/{game}/checkpoint/{checkpoint}/participant/{participant}/answer/{answer}")
+    @GET("/game/{game}/checkpoint/{checkpoint}/participant/{participant}/answer/{answer}/punch/{punch_time}")
     Call<Checkpoint> answer(
             @Path("participant") String participant,
             @Path("checkpoint") int checkpoint,
             @Path("game") int game,
-            @Path("answer") int answer
+            @Path("answer") int answer,
+            @Path("punch_time") String punch_time
     );
 
     @GET("/game/{game}/participant/{participant}/message")

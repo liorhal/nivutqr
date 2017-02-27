@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+    {% block css %}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.45/css/bootstrap-datetimepicker.css" rel="stylesheet">
+        <link rel='stylesheet prefetch' href='https://cdn.jsdelivr.net/foundation/5.5.0/css/foundation.css'>
+    {% endblock %}
+    {% block js %}
+      <script src="https://momentjs.com/downloads/moment.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.45/js/bootstrap-datetimepicker.min.js"></script>
+      <script type="text/javascript">
+            $(document).ready(function() {
+            $(function () {
+                $('#datetimepicker1').datetimepicker({
+                    format: 'DD-MM-YY, HH:mm'
+                });
+            });
+
+            $(document).ready(function() {
+
+                $('.save-button').on('click', save_onclick);
+                $('.cancel-button').on('click', cancel_onclick);
+                $('.edit-button').on('click', edit_onclick);
+
+                $('.save-button, .cancel-button').hide();
+
+                setFormMode($(this).closest("form"), 'view');
+            });
+
+            function edit_onclick(){
+                setFormMode($(this).closest("form"), 'edit');
+            }
+
+            function cancel_onclick(){
+                setFormMode($(this).closest("form"), 'view');
+
+                //TODO: Undo input changes?
+            }
+
+            function save_onclick(){
+                document.getElementById("gameForm").submit();
+                setFormMode($(this).closest("form"), 'view');
+            }
+
+
+            function setFormMode($form, mode){
+                switch(mode){
+                    case 'view':
+                        $form.find('.save-button, .cancel-button').hide();
+                        $form.find('.edit-button').show();
+                        $form.find("input, select").prop("disabled", true);
+                        break;
+                    case 'edit':
+                        $form.find('.save-button, .cancel-button').show();
+                        $form.find('.edit-button').hide();
+                        $form.find("input, select").prop("disabled", false);
+                        break;
+                }
+            }
+        });
+    </script>
+    {% endblock %}
+</head>
+<body>
+{% block main %}
+<form method="post" id="gameForm">
+  <div class="row button-section">
+      <div class="large-12 columns">
+        <input type="submit" class="button small radius save-button" value="Save">
+        <a class="button small radius cancel-button">Cancel</a>
+        <a class="button small radius edit-button">Edit</a>
+      </div>
+  </div>
+
+    <div class="row">
+        <div class="small-3 columns">
+          <label>ID
+            <input id="game_id" name="game_id" type="text" value="{{ game.game_id }}" readonly/>
+          </label>
+        </div>
+    </div>
+  <div class="row">
+    <div class="small-6 columns">
+      <label>Event Name
+        <input name="name" type="text" placeholder="Your Event Name" value="{{ game.name }}" disabled="true"/>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-3 columns">
+      <label>Time Limit</label>
+        <div class='input-group date' id='datetimepicker1'>
+            <input name="time_limit" id="inputTimeLimit" type='text' class="form-control" {%- if game.time_limit -%} value="{{ game.time_limit.strftime('%d-%m-%y, %H:%M') }}"{% endif %} disabled="true"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+  </div>
+
+    <div class="row">
+    <div class="large-6 columns">
+      <label>Event Type</label>
+      <input name="is_questions" id="questions" type="checkbox" disabled="true" {%- if game.is_questions -%}checked{% endif %}><label for="questions">Questions</label>
+      <input name="is_freeorder" id="freeorder" type="checkbox" disabled="true" {%- if game.is_freeorder -%}checked{% endif %}><label for="freeorder">Score (Free-Order)</label>
+    </div>
+  </div>
+
+    <div class="row">
+    <div class="small-9 columns">
+        <input name="user_id" type="hidden" value="{{ g.user.user_id }}" disabled="true" hidden/>
+    </div>
+  </div>
+
+</form>
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+    {% block css %}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.45/css/bootstrap-datetimepicker.css" rel="stylesheet">
+        <link rel='stylesheet prefetch' href='https://cdn.jsdelivr.net/foundation/5.5.0/css/foundation.css'>
+    {% endblock %}
+    {% block js %}
+      <script src="https://momentjs.com/downloads/moment.min.js"></script>
+      <script type="text/javascript">
+          $(document).ready(function() {
+            $(document).ready(function() {
+
+                $('.save-button').on('click', save_onclick);
+                $('.cancel-button').on('click', cancel_onclick);
+                $('.edit-button').on('click', edit_onclick);
+
+                $('.save-button, .cancel-button').hide();
+
+                setFormMode($(this).closest("form"), 'view');
+            });
+
+            function edit_onclick(){
+                setFormMode($(this).closest("form"), 'edit');
+            }
+
+            function cancel_onclick(){
+                setFormMode($(this).closest("form"), 'view');
+
+                //TODO: Undo input changes?
+            }
+
+            function save_onclick(){
+                document.getElementById("checkointForm").submit();
+                setFormMode($(this).closest("form"), 'view');
+            }
+
+
+            function setFormMode($form, mode){
+                switch(mode){
+                    case 'view':
+                        $form.find('.save-button, .cancel-button').hide();
+                        $form.find('.edit-button').show();
+                        $form.find("input, select").prop("disabled", true);
+                        break;
+                    case 'edit':
+                        $form.find('.save-button, .cancel-button').show();
+                        $form.find('.edit-button').hide();
+                        $form.find("input, select").prop("disabled", false);
+                        break;
+                }
+            }
+        });
+    </script>
+    {% endblock %}
+</head>
+<body>
+{% block main %}
+<form method="post" id="checkointForm">
+  <div class="row button-section">
+      <div class="large-12 columns">
+        <input type="submit" class="button small radius save-button" value="Save">
+        <a class="button small radius cancel-button">Cancel</a>
+        <a class="button small radius edit-button">Edit</a>
+      </div>
+  </div>
+
+    <div class="row">
+        <div class="small-3 columns">
+          <label>ID
+            <input id="checkpoint_id" name="checkpoint_id" type="text" value="{{ checkpoint.checkpoint_id }}" readonly/>
+          </label>
+        </div>
+    </div>
+  <div class="row">
+    <div class="small-3 columns">
+      <label>Checkpoint Number
+        <input name="number" type="text" value="{{ checkpoint.number }}" disabled="true"/>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-6 columns">
+      <label>Start/Finish</label>
+      <input name="is_start" id="start" type="checkbox" disabled="true" {%- if checkpoint.is_start -%}checked{% endif %}><label for="start">Start</label>
+      <input name="is_finish" id="finish" type="checkbox" disabled="true" {%- if checkpoint.is_finish -%}checked{% endif %}><label for="finish">Finish</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-9 columns">
+      <label>Question
+        <input name="question" type="text" value="{{ checkpoint.question }}" disabled="true"/>
+      </label>
+    </div>
+  </div>
+
+    <div class="row">
+    <div class="large-4 columns">
+    {% if checkpoint != none %}
+        {% set list1 = checkpoint.options.split(';') %}
+    {% else %}
+        {% set list1 = ';;'.split(';') %}
+    {% endif %}
+      <label>Options</label>
+      <input type="radio" name="options" id="first" disabled="true" value="1" {%- if checkpoint.answer == '1' -%}checked{% endif %}><input type="text" name="first_option" value="{{ list1[0] }}" disabled="true"/>
+      <input type="radio" name="options" id="second" disabled="true" value="2" {%- if checkpoint.answer == '2' -%}checked{% endif %}><input type="text" name="second_option" value="{{ list1[1] }}" disabled="true"/>
+      <input type="radio" name="options" id="third" disabled="true" value="3" {%- if checkpoint.answer == '3' -%}checked{% endif %}><input type="text" name="third_option" value="{{ list1[2] }}" disabled="true"/>
+    </div>
+  </div>
+
+    <div class="row">
+    <div class="small-9 columns">
+        <input name="game_id" type="hidden" value="{{ game_id }}" disabled="true"/>
+    </div>
+  </div>
+
+</form>
+
+{% endblock %}
+</body>
+</html>

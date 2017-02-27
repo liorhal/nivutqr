@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
 
     static final String SHOWCASEVIEW_ID = "welcome_id";
 
-    static final String API_BASE_URL = "https://nivutqr.herokuapp.com/";
+    static final String API_BASE_URL =  "https://nivutqr.herokuapp.com/";//"http://10.0.2.2:5000/";
     static final int MY_PERMISSIONS_REQUEST_GET_ACCOUNTS = 1;
 
     private Handler mHandler;
@@ -70,12 +70,13 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
     String message = "";
 
     Event event_details = null;
-    SparseArray<Checkpoint> checkpoints = new SparseArray<>();
-    ArrayList<Punch> punches = new ArrayList<>();
+    static SparseArray<Checkpoint> checkpoints = new SparseArray<>();
+    static ArrayList<halachmi.lior.nivutqr.Log> logs = new ArrayList<>();
+    static boolean unsynced = false;
     PunchAdapter punchAdapter;
 
     boolean debugMode = false;
-    String debug_content = "{\"game\": \"8\",\"checkpoint\": \"17\"}";
+    String debug_content = "{\"game\": \"1\",\"checkpoint\": \"1\"}";
 
     private boolean mIsInForegroundMode = false;
 
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
 
         ListView listview = (ListView) findViewById(R.id.list_view);
 
-        punchAdapter = new PunchAdapter(this, punches);
+        punchAdapter = new PunchAdapter(this, logs);
         // Assign adapter to ListView
         listview.setAdapter(punchAdapter);
 
@@ -355,6 +356,9 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
             case R.id.action_event_progress:
                 LogCheckpointOnScreen();
                 return true;
+            case R.id.action_sync:
+                Sync();
+                return true;
             case R.id.action_exit:
                 finish();
                 return true;
@@ -369,10 +373,15 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
         if (menu != null) {
             MenuItem mnuProgress = menu.findItem(R.id.action_event_progress);
             MenuItem mnuEventDetails = menu.findItem(R.id.action_event_details);
+            MenuItem mnuSync = menu.findItem(R.id.action_sync);
 
             if (event_details != null) {
                 mnuProgress.setVisible(true);
                 mnuEventDetails.setVisible(true);
+            }
+
+            if (unsynced){
+                mnuSync.setVisible(true);
             }
         }
 
@@ -513,15 +522,25 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
                             startRepeatingTask();
                             Checkpoint[] checkpoints_array = event_details.getCheckpoints();
                             for(int i=0; i< checkpoints_array.length; i++){
-                                checkpoints.append(checkpoints_array[i].getCheckpoint(), checkpoints_array[i]);
+                                checkpoints.append(checkpoints_array[i].getCheckpoint_id(), checkpoints_array[i]);
                             }
                             invalidateOptionsMenu();
                             TextView nameTextView = (TextView) findViewById(R.id.text_name);
                             nameTextView.setVisibility(View.INVISIBLE);
                             if (response.body().getError().equalsIgnoreCase("participant exists")){
                                 Toast.makeText(MainActivity.this, R.string.participant_exists, Toast.LENGTH_LONG).show();
+                                halachmi.lior.nivutqr.Log[] log_array = event_details.getLogs();
+                                if (log_array != null) {
+                                    for (int i = 0; i < log_array.length; i++) {
+                                        log_array[i].setSynced(true);
+                                        logs.add(log_array[i]);
+                                        LogCheckpointOnScreen();
+                                    }
+                                }
                             }
-                            showEventDetails();
+                            else {
+                                showEventDetails();
+                            }
                         }
                         else{
                             Toast.makeText(MainActivity.this, R.string.unknown_game, Toast.LENGTH_LONG).show();
@@ -534,6 +553,7 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
                     if (t != null) {
                         Log.d("response",t.toString());
                     }
+                    Toast.makeText(MainActivity.this, "Unable to get event details", Toast.LENGTH_LONG).show();
                 }
 
             });
@@ -565,20 +585,19 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
 
                 NivutQrApi client = retrofit.create(NivutQrApi.class);
 
-                Punch p = new Punch();
-                p.checkpoint = checkpoints.get(checkpoint);
-                p.answer = "";
-                p.punch_time = new Timestamp(System.currentTimeMillis());
-                punches.add(p);
+                final halachmi.lior.nivutqr.Log log = new halachmi.lior.nivutqr.Log(name, checkpoints.get(checkpoint),
+                        new Timestamp(System.currentTimeMillis()).toString(),
+                        "");
+                logs.add(log);
                 LogCheckpointOnScreen();
 
-                Call<Checkpoint> call = client.punch(name, checkpoint, game);
+                Call<Checkpoint> call = client.punch(name, checkpoint, game, new Timestamp(System.currentTimeMillis()).toString());
 
                 call.enqueue(new Callback<Checkpoint>() {
                     @Override
                     public void onResponse(Call<Checkpoint> call, Response<Checkpoint> response) {
                         if (response != null) {
-                            final String question = response.body().getQuestion();
+                            /*final String question = response.body().getQuestion();
                             if (question != null && !question.equals("")) {
                                 Handler h = new Handler(MainActivity.this.getMainLooper());
                                 final String[] options = response.body().getOptions().split(";");
@@ -591,9 +610,10 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
                                     }
                                 });
                             }
-                            else{
+                            else{*/
                                 Toast.makeText(MainActivity.this, R.string.checkpoint_logged,Toast.LENGTH_LONG).show();
-                            }
+                                log.setSynced(true);
+                            //}
                         }
                     }
 
@@ -602,6 +622,10 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
                         if (t != null) {
                             Log.d("response", t.toString());
                         }
+                        //failed to log the punch
+                        Toast.makeText(MainActivity.this, "Failed to log the punch.\nSettings->Sync when network available", Toast.LENGTH_LONG).show();
+                        unsynced = true;
+                        LogCheckpointOnScreen();
                     }
 
                 });
@@ -617,6 +641,66 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
                 newDialogFragment.show(getFragmentManager(), "question");
             }
         }
+    }
+
+    private void Sync() {
+        unsynced = false;
+        for (final halachmi.lior.nivutqr.Log log : logs) {
+            if (!log.getSynced()) {
+                try {
+                    OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+                    Retrofit.Builder builder =
+                            new Retrofit.Builder()
+                                    .baseUrl(API_BASE_URL)
+                                    .addConverterFactory(
+                                            GsonConverterFactory.create()
+                                    );
+
+                    Retrofit retrofit =
+                            builder
+                                    .client(
+                                            httpClient.build()
+                                    )
+                                    .build();
+
+                    NivutQrApi client = retrofit.create(NivutQrApi.class);
+
+                    Call<Checkpoint> call = null;
+
+                    call = client.punch(log.getParticipant(), log.getCheckpoint().getCheckpoint_id(), game, log.getPunch_time().toString());
+
+                    if (!log.getAnswer().equals("")) {
+                        call = client.answer(log.getParticipant(), log.getCheckpoint().getCheckpoint_id(), game, Integer.valueOf(log.getAnswer()), new Timestamp(System.currentTimeMillis()).toString());
+                    }
+
+                    call.enqueue(new Callback<Checkpoint>() {
+                        @Override
+                        public void onResponse(Call<Checkpoint> call, Response<Checkpoint> response) {
+                            if (response != null) {
+                                Toast.makeText(MainActivity.this, R.string.checkpoint_logged, Toast.LENGTH_LONG).show();
+                                log.setSynced(true);
+                                LogCheckpointOnScreen();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Checkpoint> call, Throwable t) {
+                            if (t != null) {
+                                Log.d("response", t.toString());
+                            }
+                            //failed to log the punch
+                            Toast.makeText(MainActivity.this, "Failed to log the punch.\nSettings->Sync when network available", Toast.LENGTH_LONG).show();
+                            unsynced = true;
+                        }
+
+                    });
+                } catch (Exception exp) {
+                    Log.d("status", exp.getMessage());
+                }
+            }
+        }
+        LogCheckpointOnScreen();
     }
 
     private String getEditTextValue(int TextViewId){
@@ -670,16 +754,11 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
 
             String name = getEditTextValue(R.id.text_name);
 
-            Call<Checkpoint> call = client.answer(name, checkpoint, game, selectedOption);
+            Call<Checkpoint> call = client.answer(name, checkpoint, game, selectedOption, new Timestamp(System.currentTimeMillis()).toString());
 
-            if (checkpoint != 0) {
-                Punch p = new Punch();
-                p.checkpoint = checkpoints.get(checkpoint);
-                p.answer = String.valueOf(selectedOption);
-                p.punch_time = new Timestamp(System.currentTimeMillis());
-                punches.add(p);
-                LogCheckpointOnScreen();
-            }
+            final halachmi.lior.nivutqr.Log log = new halachmi.lior.nivutqr.Log(name, checkpoints.get(checkpoint), new Timestamp(System.currentTimeMillis()).toString(), String.valueOf(selectedOption));
+            logs.add(log);
+            LogCheckpointOnScreen();
 
             call.enqueue(new Callback<Checkpoint>() {
                 @Override
@@ -690,6 +769,7 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
                             @Override
                             public void run() {
                                 Toast.makeText(MainActivity.this, R.string.checkpoint_logged,Toast.LENGTH_LONG).show();
+                                log.setSynced(true);
                             }
                         });
                     }
@@ -700,6 +780,10 @@ public class MainActivity extends AppCompatActivity implements QuestionDialogFra
                     if (t != null) {
                         Log.d("response",t.toString());
                     }
+
+                    //failed to log the punch
+                    Toast.makeText(MainActivity.this, "Failed to log the punch.\nSettings->Sync when network available", Toast.LENGTH_LONG).show();
+                    unsynced = true;
                 }
 
             });

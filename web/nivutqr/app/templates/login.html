@@ -1,9 +1,6 @@
+{% extends "base.html" %}
+{% block main %}
 <link rel="stylesheet" href="../static/css/style.css" type="text/css">
-{% block body %}
-{% if session['logged_in'] %}
-<p>You're logged in already!</p>
-{% else %}
-
 
 <form action="/login" method="POST">
 	<div class="login">
@@ -29,6 +26,4 @@
 		</div>
 	</div>
 </form>
-
-{% endif %}
 {% endblock %}

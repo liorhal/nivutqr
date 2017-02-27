@@ -24,6 +24,11 @@
         android:visible="false"
         android:icon="@drawable/ic_progress"/>
     <item
+        android:id="@+id/action_sync"
+        android:orderInCategory="100"
+        android:title="Sync"
+        android:visible="false"/>
+    <item
         android:id="@+id/action_exit"
         android:orderInCategory="100"
         android:title="@string/action_event_exit"
