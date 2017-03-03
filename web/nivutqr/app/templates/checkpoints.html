@@ -25,13 +25,12 @@
   <body>
 {% block main %}
     <div class="container">
+    <a href="{url_for('run', game_id=game_id)}" />Event -></a><h3>Checkpoint Manager</h3>
     <table class='table' data-sorting="true">
     <thead>
       <tr>
-        <th style="width: 5%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">ID</th>
         <th style="width: 10%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Checkpoint Number</th>
-        <th style="width: 5%; vertical-align: middle; align:center;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Start</th>
-        <th style="width: 5%; vertical-align: middle; align:center;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Finish</th>
+        <th style="width: 5%; vertical-align: middle; align:center;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Start/Finish</th>
         <th style="width: 30%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Question</th>
         <th style="width: 20%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Options</th>
         <th style="width: 10%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Answer</th>
@@ -41,10 +40,8 @@
       </thead>
       {% for checkpoint in checkpoints %}
       <tr>
-        <td>{{ checkpoint.checkpoint_id }}</td>
         <td>{{ checkpoint.number }}</td>
-        <td align="center">{%- if checkpoint.is_start -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
-          <td align="center">{%- if checkpoint.is_finish -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
+        <td align="center">{%- if checkpoint.is_start -%}Start{% elif checkpoint.is_finish%}Finish{% else %}<span />{% endif %}</td>
         <td>{{ checkpoint.question }}</td>
         {% if checkpoint.options %}
           <td>{%- for option in checkpoint.options.split(';') -%}<li>{{ option }}</li>{% endfor %}</td>

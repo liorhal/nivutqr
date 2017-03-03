@@ -79,24 +79,45 @@ def about():
                            title='games',
                            games=Game.query.filter(Game.user_id == 1).order_by(Game.game_id).all())
 
+@app.route('/game/<string:game_id>/run')
+def run(game_id):
+    logs = get_progress(game_id)
+    results = get_game_results(game_id)
+    return render_template('event_manager.html',
+                           title='run event',
+                           game=Game.query.get(game_id),
+                           results=results,
+                           logs=logs)
+
+@app.route('/game/<string:game_id>/message', methods=['POST'])
+def message(game_id):
+    g = Game.query.get(game_id)
+    g.message = request.form['message']
+    db.session.commit()
+    return redirect(url_for('run', game_id=game_id))
 
 @app.route('/game/<string:game_id>', methods=['GET','POST'])
 def game(game_id):
     if request.method == 'POST':
-        game_id = request.form['game_id']
-        if game_id != '':
+        if request.form['delete'] == 'delete':
             g = Game.query.get(game_id)
+            db.session.delete(g)
+        elif request.form['delete'] == 'clear':
+            clear_game(game_id)
         else:
-            g = Game()
-            db.session.add(g)
-
-        g.name = request.form['name']
-        g.time_limit = datetime.strptime(request.form['time_limit'], '%d-%m-%y, %H:%M')
-        g.user_id = request.form['user_id']
-        g.is_freeorder = request.form.get('is_freeorder') == 'on'
-        g.is_questions = request.form.get('is_questions') == 'on'
+            game_id = request.form['game_id']
+            if game_id != '':
+                g = Game.query.get(game_id)
+            else:
+                g = Game()
+                db.session.add(g)
+            g.name = request.form['name']
+            g.time_limit = datetime.strptime(request.form['time_limit'], '%d-%m-%y, %H:%M')
+            g.user_id = request.form['user_id']
+            g.is_freeorder = request.form.get('is_freeorder') == 'on'
+            g.is_questions = request.form.get('is_questions') == 'on'
         db.session.commit()
-        return redirect(('home'))
+        return redirect(url_for('home'))
     elif request.method == 'GET':
         if game_id == 'new':
             g = None
@@ -109,20 +130,23 @@ def game(game_id):
 @app.route('/game/<string:game_id>/checkpoint/<string:checkpoint_id>', methods=['GET','POST'])
 def checkpoint(game_id, checkpoint_id):
     if request.method == 'POST':
-        checkpoint_id = request.form['checkpoint_id']
-        if request.form['checkpoint_id'] != '':
+        if request.form['delete'] == 'delete':
             cp = Checkpoint.query.get(checkpoint_id)
+            db.session.delete(cp)
         else:
-            cp = Checkpoint()
-            db.session.add(cp)
-        cp.number = request.form['number']
-        cp.question = request.form['question']
-        cp.options = ";".join(
-            (request.form['first_option'], request.form['second_option'], request.form['third_option']))
-        cp.answer = request.form['options']
-        cp.game_id = request.form['game_id']
-        cp.is_start = request.form.get('is_start') == 'on'
-        cp.is_finish = request.form.get('is_finish') == 'on'
+            if checkpoint_id != 'new':
+                cp = Checkpoint.query.get(checkpoint_id)
+            else:
+                cp = Checkpoint()
+                db.session.add(cp)
+            cp.number = request.form['number']
+            cp.question = request.form['question']
+            cp.options = ";".join(
+                (request.form['first_option'], request.form['second_option'], request.form['third_option']))
+            cp.answer = request.form['options']
+            cp.game_id = request.form['game_id']
+            cp.is_start = request.form.get('is_start') == 'on'
+            cp.is_finish = request.form.get('is_finish') == 'on'
         db.session.commit()
         return redirect(url_for('game_checkpoints', game_id=game_id))
     elif request.method == 'GET':
@@ -178,16 +202,18 @@ def punch(game_id, checkpoint_id, participant_name, punch_time):
     response.mimetype = 'application/json'
     return response
 
+def get_progress(game_id):
+    cps = Checkpoint.query.with_entities(Checkpoint.checkpoint_id).filter(Checkpoint.game_id == game_id)
+    logs = Log.query.filter(Log.checkpoint_id.in_(cps)).order_by(Log.punch_time)
+    return logs
 
 @app.route('/game/<string:game_id>/progress')
 @nocache
 def game_progress(game_id):
-    cps = Checkpoint.query.with_entities(Checkpoint.checkpoint_id).filter(Checkpoint.game_id == game_id)
-    logs = Log.query.filter(Log.checkpoint_id.in_(cps)).order_by(Log.punch_time)
     g = Game.query.get(game_id)
     return render_template('progress.html',
                            title='progress',
-                           logs=logs,
+                           logs=get_progress(game_id),
                            game=g)
 
 
@@ -214,10 +240,7 @@ def show_qr(game_id, checkpoint_id):
                            next_checkpoint=next,
                            game_id=game_id)
 
-
-@app.route('/game/<string:game_id>/results')
-@nocache
-def show_game_results(game_id):
+def get_game_results(game_id):
     # taking the last start and finish for each participant
     sub_start = db.session.query(func.max(Log.punch_time).label('punch'), Log.participant.label('participant')).join(
         Checkpoint).filter(Checkpoint.is_start == true(), Checkpoint.game_id == game_id).group_by(
@@ -225,30 +248,46 @@ def show_game_results(game_id):
     sub_finish = db.session.query(func.max(Log.punch_time).label('punch'), Log.participant.label('participant')).join(
         Checkpoint).filter(Checkpoint.is_finish == true(), Checkpoint.game_id == game_id).group_by(
         Log.participant).subquery()
-
     results = db.session.query(sub_start.c.participant,
                                (sub_finish.c.punch - sub_start.c.punch).label('result')).join(sub_finish,
-                                                                                                          sub_start.c.participant == sub_finish.c.participant).order_by(
+                                                                                              sub_start.c.participant == sub_finish.c.participant).order_by(
         'result')
-    g = Game.query.get(game_id)
+    return results
 
+@app.route('/game/<string:game_id>/results')
+@nocache
+def show_game_results(game_id):
+    g = Game.query.get(game_id)
     return render_template('results.html',
                            title='results',
-                           results=results,
+                           results=get_game_results(game_id),
                            game=g)
 
-
-@app.route('/game/<string:game_id>/clear')
+@app.route('/user', methods = ['GET', 'POST'])
 @login_required
 @nocache
+def user():
+    u = User.query.get(g.user.user_id)
+    if request.method == 'POST':
+        u.login = request.form['login']
+        u.password = request.form['password']
+        u.phone = request.form['phone']
+        u.first_name = request.form['first_name']
+        u.last_name = request.form['last_name']
+        db.session.commit()
+        return redirect(url_for('home'))
+    if request.method == 'GET':
+        return render_template('user.html',
+                               title='user',
+                               user=u)
+
 def clear_game(game_id):
     cps = Checkpoint.query.with_entities(Checkpoint.checkpoint_id).filter(Checkpoint.game_id == game_id)
     logs = Log.query.filter(Log.checkpoint_id.in_(cps))
     for log in logs:
         db.session.delete(log)
     db.session.commit()
-    response = Response()
-    return response
+    return true
 
 
 @app.route('/game/<string:game_id>/participant/<string:participant>/register2')

@@ -1,0 +1,32 @@
+{% macro showprogress(logs, game, paging) -%}
+    <div class="container">
+    <table class='table'  data-sorting="true" data-paging={{ paging }} data-filtering="true">
+        <thead>
+      <tr>
+    {% if not participant %}
+        <th>Participant</th>
+    {% endif %}
+        <th data-type="number">Checkpoint Number</th>
+        <th data-type="date" data-format-string="YYYY-MM-DD HH:mm:ss" data-sorted="true" data-direction="DESC">Punch Time</th>
+  {% if not game or (game and game.is_questions) %}
+        <th>Answer</th>
+        <th>Check</th>
+    {% endif %}
+      </tr>
+      </thead>
+      {% for log in logs %}
+      <tr>
+        {% if not participant %}
+            <td><a href="/game/{{log.checkpoint.game_id}}/participant/{{log.participant}}">{{log.participant}}</a></td>
+        {% endif %}
+            <td>{{ log.checkpoint.number }}</td>
+            <td>{{ log.punch_time }}</td>
+        {% if log.checkpoint.game.is_questions %}
+            <td>{{ log.answer }}</td>
+          {%- if log.answer == log.checkpoint.answer -%}<td align="center" style="background-color:green"><span class="glyphicon glyphicon-ok-circle" />{% else %}<td align="center" style="background-color:red"><span class="glyphicon glyphicon-remove-circle" />{% endif %}</td>
+        {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+  </div>
+{%- endmacro %}

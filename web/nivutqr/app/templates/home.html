@@ -2,13 +2,9 @@
 <html>
   <head>
     {% block css %}
-    <link href="/static/css/bootstrap.css" rel="stylesheet" media="screen">
     <link href="/static/css/footable.standalone.css" rel="stylesheet"/>
     {% endblock %}
 {% block js %}
-    <script src="/static/js/jquery-3.1.1.js"></script>
-    <script src="/static/js/bootstrap.js"></script>
-    <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script src="/static/js/footable.js"></script>
     <script type="text/javascript">
         jQuery(function($){
@@ -29,25 +25,18 @@
         <th>Score(Free Order)</th>
         <th>Checkpoints</th>
         <th>Time Limit</th>
-        <th>Results</th>
-        <th>Clear</th>
         <th>Edit</th>
       </tr>
       </thead>
       {% for game in games %}
       <tr>
         <td>{{game.game_id}}</td>
-        <td>{{game.name}}</td>
+        <td><a href="/game/{{game.game_id}}/run">{{game.name}}</a></td>
         <td align="center">{%- if game.is_questions -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
         <td align="center">{%- if game.is_freeorder -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
         <td><a href="/game/{{game.game_id}}/checkpoint/all">{{ game.checkpoints.count() }}<span>    </span><span class="glyphicon glyphicon-th-list" /></a></td>
         <td>{{ game.time_limit }}</td>
-        <td><a href="/game/{{game.game_id}}/results"><span class="glyphicon glyphicon-list-alt" /></a></td>
-        <td><a align="center" type=button value="Clear" onClick="if(confirm('Clear the game results?'))
-                                document.location.href = '/game/{{game.game_id}}/clear';"><span class="glyphicon glyphicon-trash" /></a></td>
-          <td style="text-align:center;">
-                <a href="/game/{{game.game_id}}" class="btn btn-primary">Edit</a>
-        </td>
+        <td><a href="/game/{{game.game_id}}" class="btn btn-primary">Edit</a></td>
       </tr>
       {% endfor %}
 

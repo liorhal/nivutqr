@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+    {% block css %}
+        <link rel='stylesheet prefetch' href='https://cdn.jsdelivr.net/foundation/5.5.0/css/foundation.css'>
+    {% endblock %}
+    {% block js %}
+      <script src="https://momentjs.com/downloads/moment.min.js"></script>
+      <script type="text/javascript">
+          $(document).ready(function() {
+            $(document).ready(function() {
+
+                $('.save-button').on('click', save_onclick);
+                $('.cancel-button').on('click', cancel_onclick);
+                $('.edit-button').on('click', edit_onclick);
+
+                $('.save-button, .cancel-button').hide();
+
+                setFormMode($(this).closest("form"), 'view');
+            });
+
+            function edit_onclick(){
+                setFormMode($(this).closest("form"), 'edit');
+            }
+
+            function cancel_onclick(){
+                setFormMode($(this).closest("form"), 'view');
+
+                //TODO: Undo input changes?
+            }
+
+            function save_onclick(){
+                document.getElementById("userForm").submit();
+                setFormMode($(this).closest("form"), 'view');
+            }
+
+
+            function setFormMode($form, mode){
+                switch(mode){
+                    case 'view':
+                        $form.find('.save-button, .cancel-button').hide();
+                        $form.find('.edit-button').show();
+                        $form.find("input, select").prop("disabled", true);
+                        break;
+                    case 'edit':
+                        $form.find('.save-button, .cancel-button').show();
+                        $form.find('.edit-button').hide();
+                        $form.find("input, select").prop("disabled", false);
+                        break;
+                }
+            }
+        });
+    </script>
+    {% endblock %}
+</head>
+<body>
+{% block main %}
+<form method="post" id="userForm">
+  <div class="row button-section">
+      <div class="large-12 columns">
+        <input type="submit" class="button small radius save-button" value="Save">
+        <a class="button small radius cancel-button">Cancel</a>
+        <a class="button small radius edit-button">Edit</a>
+      </div>
+  </div>
+
+    <div class="row">
+        <div class="small-3 columns">
+            <input id="user_id" name="user_id" type="hidden" value="{{ user.user_id }}" readonly/>
+        </div>
+    </div>
+  <div class="row">
+    <div class="small-3 columns">
+      <label>Login Name
+        <input name="login" type="text" value="{{ user.login }}" disabled="true"/>
+      </label>
+    </div>
+  </div>
+    <div class="row">
+    <div class="small-3 columns">
+      <label>Password
+        <input name="password" type="password" value="{{ user.password }}" disabled="true"/>
+      </label>
+    </div>
+  </div>
+      <div class="row">
+    <div class="small-3 columns">
+      <label>Phone Number
+        <input name="phone" type="text" value="{{ user.phone }}" disabled="true"/>
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="large-4 columns">
+      <label>First Name
+        <input name="first_name" type="text" value="{{ user.first_name }}" disabled="true"/>
+      </label>
+    <label>Last Name
+        <input name="last_name" type="text" value="{{ user.last_name }}" disabled="true"/>
+      </label>
+      </div>
+  </div>
+
+</form>
+
+{% endblock %}
+</body>
+</html>

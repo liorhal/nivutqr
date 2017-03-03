@@ -17,8 +17,10 @@
                 $('.save-button').on('click', save_onclick);
                 $('.cancel-button').on('click', cancel_onclick);
                 $('.edit-button').on('click', edit_onclick);
+                $('.delete-button').on('click', delete_onclick);
 
                 $('.save-button, .cancel-button').hide();
+                $('.delete-button, .cancel-button').hide();
 
                 setFormMode($(this).closest("form"), 'view');
             });
@@ -34,39 +36,60 @@
             }
 
             function save_onclick(){
-                document.getElementById("checkointForm").submit();
+                document.getElementById("checkpointForm").submit();
                 setFormMode($(this).closest("form"), 'view');
             }
 
+            function delete_onclick(){
+                document.getElementById("deleteInput").value = 'delete';
+                document.getElementById("checkpointForm").submit();
+                setFormMode($(this).closest("form"), 'view');
+            }
 
             function setFormMode($form, mode){
                 switch(mode){
                     case 'view':
                         $form.find('.save-button, .cancel-button').hide();
+                        $form.find('.delete-button, .cancel-button').hide();
                         $form.find('.edit-button').show();
                         $form.find("input, select").prop("disabled", true);
                         break;
                     case 'edit':
                         $form.find('.save-button, .cancel-button').show();
+                        $form.find('.delete-button, .cancel-button').show();
                         $form.find('.edit-button').hide();
                         $form.find("input, select").prop("disabled", false);
                         break;
                 }
             }
         });
+
+            function validateForm() {
+                var number = document.forms["checkpointForm"]["number"].value;
+                if (number == "") {
+                    alert("Number must be filled out");
+                    return false;
+                }
+            }
     </script>
     {% endblock %}
 </head>
 <body>
 {% block main %}
-<form method="post" id="checkointForm">
+<form method="post" id="checkpointForm" onsubmit="return validateForm()">
   <div class="row button-section">
       <div class="large-12 columns">
         <input type="submit" class="button small radius save-button" value="Save">
         <a class="button small radius cancel-button">Cancel</a>
         <a class="button small radius edit-button">Edit</a>
+        <input type="submit" class="button alert small radius delete-button" value="Delete" name="delete">
       </div>
   </div>
+      <div class="row">
+        <div class="small-3 columns">
+            <input id="deleteInput" name="delete" value="False" type="hidden" readonly/>
+        </div>
+    </div>
 
     <div class="row">
         <div class="small-3 columns">
@@ -75,12 +98,14 @@
           </label>
         </div>
     </div>
-  <div class="row">
-    <div class="small-3 columns">
-      <label>Checkpoint Number
-        <input name="number" type="text" value="{{ checkpoint.number }}" disabled="true"/>
-      </label>
-    </div>
+   <div class="control-group">
+      <div class="row">
+        <div class="small-3 columns">
+          <label>Checkpoint Number
+            <input name="number" type="text" value="{{ checkpoint.number }}" disabled="true"/>
+          </label>
+        </div>
+      </div>
   </div>
   <div class="row">
     <div class="large-6 columns">
