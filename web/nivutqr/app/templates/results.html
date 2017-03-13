@@ -24,9 +24,19 @@
   </head>
   <body>
     {% block main %}
-    {% import 'show_results_macro.html' as resultsmacro %}
-    <div class="results">
-        {{ resultsmacro.showresults(results, game, "false")}}
+    <div class="container">
+         <ol class="breadcrumb">
+        <li><a href="{{ url_for('home') }}">My Events</a></li>
+        <li><a href="{{ url_for('run', game_id=game.game_id) }}">Run Event</a></li>
+        <li class="active">Event Results</li>
+      </ol>
+
+      <a class="btn btn-primary" href="/game/{{game.game_id}}/results/export"><span class="glyphicon glyphicon-cloud-download"> Download</span></a>
+
+        {% import 'show_results_macro.html' as resultsmacro %}
+        <div class="results">
+            {{ resultsmacro.showresults(results, game, "false")}}
+        </div>
     </div>
     {% endblock %}
   </body>

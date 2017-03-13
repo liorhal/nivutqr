@@ -12,6 +12,7 @@ class User(db.Model):
     phone = db.Column(db.String(50))
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
+    subscription = db.Column(db.Integer)
 
     games = db.relationship('Game', backref='user', lazy='dynamic')
 
@@ -19,8 +20,9 @@ class User(db.Model):
         return self.login
 
     def __init__(self , login ,password):
-        self.username = login
+        self.login = login
         self.password = password
+        self.subscription = 3
 
     def is_authenticated(self):
         return True
@@ -48,7 +50,7 @@ class Game(db.Model):
     message_timestamp = db.Column(db.DateTime)
     time_limit = db.Column(db.DateTime)
 
-    checkpoints = db.relationship('Checkpoint', backref='game', lazy='dynamic')
+    checkpoints = db.relationship('Checkpoint', backref='game', cascade="all,delete", lazy='dynamic')
 
     def __repr__(self):
         return self.name
@@ -66,7 +68,7 @@ class Checkpoint(db.Model):
     options = db.Column(db.String(255))
     answer = db.Column(db.String(255))
 
-    logs = db.relationship('Log', backref='checkpoint', lazy='dynamic')
+    logs = db.relationship('Log', backref='checkpoint', cascade="all,delete", lazy='dynamic')
 
     @property
     def serialize(self):

@@ -29,6 +29,18 @@
   <body>
 {% block main %}
       <div class="container">
+
+ <ol class="breadcrumb">
+    <li><a href="{{ url_for('home') }}">My Events</a></li>
+    <li class="active">Run Event</li>
+  </ol>
+
+    {% if errors|length > 0 %}
+    <div class="alert alert-warning">
+    <strong>Warning!</strong> {%- for error in errors -%}<li>{{ error }}</li>{% endfor %}</td>
+  </div>
+  {% endif %}
+
 <table class='table' data-sorting="true">
     <thead>
       <tr>
@@ -63,14 +75,17 @@
                 <div class="results">
                     {{ res.showresults(results, game, "true")}}
                 </div>
-        <a class="btn btn-primary" href="/game/{{game.game_id}}/results"><span class="glyphicon glyphicon-new-window" /></a>
+        <a class="btn btn-primary" href="/game/{{game.game_id}}/results"><span class="glyphicon glyphicon-new-window"> New Window</span></a>
+        <a class="btn btn-primary" href="/game/{{game.game_id}}/results/export"><span class="glyphicon glyphicon-cloud-download"> Download</span></a>
     </div>
     <div id="progress" class="collapse">
                 {% import 'show_progress_macro.html' as progress %}
                 <div class="logs">
-                    {{ progress.showprogress(logs, game, "true")}}
+                    {{ progress.showprogress(logs, game, None, "true")}}
                 </div>
-        <a class="btn btn-primary" href="/game/{{game.game_id}}/progress"><span class="glyphicon glyphicon-new-window" /></a>
+        <a class="btn btn-primary" href="/game/{{game.game_id}}/progress"><span class="glyphicon glyphicon-new-window"> New Window</span></a>
+        <a class="btn btn-primary" href="/game/{{game.game_id}}/progress/export"><span class="glyphicon glyphicon-cloud-download"> Download</span></a>
+
     </div>
 </div>
 

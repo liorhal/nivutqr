@@ -1,3 +1,4 @@
+{% extends "base.html" %}
 <html>
   <head>
     {% if title %}
@@ -9,10 +10,18 @@
       <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
-      <script src="https://momentjs.com/downloads/moment.min.js"></script>
   </head>
   <body>
+{% block main %}
     <div class="container">
+
+   <ol class="breadcrumb">
+    <li><a href="{{ url_for('home') }}">My Events</a></li>
+    <li><a href="{{ url_for('run', game_id=game_id) }}">Run Event</a></li>
+    <li><a href="{{ url_for('game_checkpoints', game_id=game_id) }}">Checkpoint Manager</a></li>
+    <li class="active">QR</li>
+  </ol>
+
     <table class='table table-bordered table-striped'>
       <tr>
         <td align="center"></td>
@@ -21,7 +30,7 @@
       </tr>
       <tr>
         <td align="center" style="vertical-align: middle;">{%- if previous_checkpoint -%}<a href="/game/{{ game_id }}/checkpoint/{{ previous_checkpoint.checkpoint_id }}/qr" />Previous</a>{% endif %}</td>
-        <td align="center"><img src="{{ 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={game: ' ~ game_id ~ ',checkpoint: ' ~ checkpoint.checkpoint_id ~ '}' }}" alt="qr"></td>
+        <td align="center"><img src="{{ 'http://crm.wherrelz.com/api/qr/?type=png&text={game: ' ~ game_id ~ ',checkpoint: ' ~ checkpoint.checkpoint_id ~ '}'}}" alt="qr" style="width:300px;height:300px;"></td>
         <td align="center" style="vertical-align: middle;">{%- if next_checkpoint -%}<a href="/game/{{ game_id }}/checkpoint/{{ next_checkpoint.checkpoint_id }}/qr" />Next</a>{% endif %}</td>
       </tr>
             <tr>
@@ -31,5 +40,6 @@
       </tr>
     </table>
   </div>
+{% endblock %}
   </body>
 </html>

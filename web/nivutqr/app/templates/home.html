@@ -16,13 +16,18 @@
   <body>
   {% block main %}
     <div class="container">
+{% if errors|length > 0 %}
+    <div class="alert alert-warning">
+    <strong>Warning!</strong> {%- for error in errors -%}<li>{{ error }}</li>{% endfor %}</td>
+  </div>
+  {% endif %}
 <table class='table' data-sorting="true">
         <thead>
       <tr>
         <th>ID</th>
         <th>Name</th>
+        <th>Run</th>
         <th>Questions</th>
-        <th>Score(Free Order)</th>
         <th>Checkpoints</th>
         <th>Time Limit</th>
         <th>Edit</th>
@@ -31,9 +36,9 @@
       {% for game in games %}
       <tr>
         <td>{{game.game_id}}</td>
-        <td><a href="/game/{{game.game_id}}/run">{{game.name}}</a></td>
-        <td align="center">{%- if game.is_questions -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
-        <td align="center">{%- if game.is_freeorder -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
+        <td>{{game.name}}</td>
+        <td><a href="/game/{{game.game_id}}/run" class="btn btn-primary">Run</a></td>
+        <td>{%- if game.is_questions -%}<span class="glyphicon glyphicon-ok-circle" />{% else %}<span />{% endif %}</td>
         <td><a href="/game/{{game.game_id}}/checkpoint/all">{{ game.checkpoints.count() }}<span>    </span><span class="glyphicon glyphicon-th-list" /></a></td>
         <td>{{ game.time_limit }}</td>
         <td><a href="/game/{{game.game_id}}" class="btn btn-primary">Edit</a></td>

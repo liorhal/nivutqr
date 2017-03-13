@@ -9,6 +9,19 @@
 				<h1>Login</h1>
 			</div>
 
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <div class="alert alert-warning">
+        {{ message }}
+      </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 			<div class="login-form">
 				<div class="control-group">
 				<input type="text" class="login-field" value="" placeholder="username" name="login">

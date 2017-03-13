@@ -1,27 +1,42 @@
 {% extends "base.html" %}
 {% block main %}
-  <form action="" method=post class="form-horizontal">
-    <h2>Sign up for NivutQR Application </h2>
-    <div class="control-group">
-        <div class="controls">
-          <input type="text" id="login" name="username" class="input-xlarge"
-            placeholder="Enter Username" value="{{ request.form.login }}"
-            required>
-        </div>
-    </div>
- 
-    <div class="control-group">
-        <div class="controls">
-          <input type="password" id="password" name="password" class="input-xlarge"
-            placeholder="Enter Password" value="{{ request.form.password }}"
-            required>
-        </div>
-    </div>
+<link rel="stylesheet" href="../static/css/style.css" type="text/css">
 
-    <div class="control-group">
-        <div class="controls">
-          <button type="submit" class="btn btn-success">Signup</button>
-        </div>
-    </div>
-  </form>
+<form action="" method="POST">
+	<div class="login">
+		<div class="login-screen">
+			<div class="app-title">
+				<h1>Create New User</h1>
+			</div>
+
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <div class="alert alert-warning">
+        {{ message }}
+      </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+			<div class="login-form">
+				<div class="control-group">
+				<input type="text" class="login-field" value="" placeholder="username" name="login">
+				<label class="login-field-icon fui-user" for="login-name"></label>
+				</div>
+
+				<div class="control-group">
+				<input type="password" class="login-field" value="" placeholder="password" name="password">
+				<label class="login-field-icon fui-lock" for="login-pass"></label>
+				</div>
+
+                <input type="submit" value="Register" class="btn btn-primary btn-large btn-block" >
+			    <br>
+			</div>
+		</div>
+	</div>
+</form>
 {% endblock %}

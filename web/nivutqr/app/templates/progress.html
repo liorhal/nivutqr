@@ -20,9 +20,24 @@
   </head>
   <body>
     {% block main %}
-    {% import 'show_progress_macro.html' as progress %}
-    <div class="logs">
-        {{ progress.showprogress(logs, game, "false")}}
+    <div class="container">
+         <ol class="breadcrumb">
+            <li><a href="{{ url_for('home') }}">My Events</a></li>
+            <li><a href="{{ url_for('run', game_id=game.game_id) }}">Run Event</a></li>
+                {% if participant %}
+                    <li><a href="{{ url_for('game_progress', game_id=game.game_id) }}">Event Progress</a></li>
+                    <li class="active">{{ participant }}</li>
+                {% else %}
+                    <li class="active">Event Progress</li>
+                {% endif %}
+      </ol>
+
+      <a class="btn btn-primary" href="/game/{{game.game_id}}/progress/export"><span class="glyphicon glyphicon-cloud-download"> Download</span></a>
+
+        {% import 'show_progress_macro.html' as progress %}
+        <div class="logs">
+            {{ progress.showprogress(logs, game, participant, "false")}}
+        </div>
     </div>
     {% endblock %}
   </body>

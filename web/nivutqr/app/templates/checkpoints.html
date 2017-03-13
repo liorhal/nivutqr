@@ -24,38 +24,55 @@
   </head>
   <body>
 {% block main %}
-    <div class="container">
-    <a href="{url_for('run', game_id=game_id)}" />Event -></a><h3>Checkpoint Manager</h3>
+<div class="container">
+   <ol class="breadcrumb">
+    <li><a href="{{ url_for('home') }}">My Events</a></li>
+    <li><a href="{{ url_for('run', game_id=game_id) }}">Run Event</a></li>
+    <li class="active">Checkpoint Manager</li>
+  </ol>
+
+  {% if errors|length > 0 %}
+    <div class="alert alert-warning">
+    <strong>Warning!</strong> {%- for error in errors -%}<li>{{ error }}</li>{% endfor %}</td>
+  </div>
+  {% endif %}
+
+
     <table class='table' data-sorting="true">
     <thead>
       <tr>
         <th style="width: 10%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Checkpoint Number</th>
         <th style="width: 5%; vertical-align: middle; align:center;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Start/Finish</th>
+        {% if game.is_questions %}
         <th style="width: 30%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Question</th>
         <th style="width: 20%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Options</th>
         <th style="width: 10%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Answer</th>
+        {% endif %}
           <th style="width: 5%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">QR</th>
           <th style="width: 5%; vertical-align: middle;" rowspan="2" class='az' data-defaultsign="nospan" data-defaultsort="asc">Edit</th>
       </tr>
       </thead>
       {% for checkpoint in checkpoints %}
       <tr>
-        <td>{{ checkpoint.number }}</td>
-        <td align="center">{%- if checkpoint.is_start -%}Start{% elif checkpoint.is_finish%}Finish{% else %}<span />{% endif %}</td>
-        <td>{{ checkpoint.question }}</td>
-        {% if checkpoint.options %}
-          <td>{%- for option in checkpoint.options.split(';') -%}<li>{{ option }}</li>{% endfor %}</td>
-              {% else %}
-          <td></td>
-          {% endif %}
-        <td>{{ checkpoint.answer }}</td>
-          <td align="center"><a href="/game/{{ game_id }}/checkpoint/{{ checkpoint.checkpoint_id }}/qr" /><img src="{{ 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={game: ' ~ game_id ~ ',checkpoint: ' ~ checkpoint.checkpoint_id ~ '}' }}" alt="qr" style="width:50px;height:50px;"></a></td>
-          <td align="center"><a href="/game/{{ game_id }}/checkpoint/{{ checkpoint.checkpoint_id }}" class="btn btn-primary">Edit</a></td>
+            <td>{{ checkpoint.number }}</td>
+            <td>{%- if checkpoint.is_start -%}Start{% elif checkpoint.is_finish%}Finish{% else %}<span />{% endif %}</td>
+        {% if game.is_questions %}
+            <td>{{ checkpoint.question }}</td>
+            <td>{%- if checkpoint.options -%}{%- for option in checkpoint.options.split(';') -%}<li>{{ option }}</li>{% endfor %}{% endif %}</td>
+            <td>{{ checkpoint.answer }}</td>
+        {% endif %}
+            <td><a href="/game/{{ game_id }}/checkpoint/{{ checkpoint.checkpoint_id }}/qr" /><img src="{{ 'http://crm.wherrelz.com/api/qr/?type=png&text={game: ' ~ game_id ~ ',checkpoint: ' ~ checkpoint.checkpoint_id ~ '}'}}" alt="qr" style="width:50px;height:50px;"></a></td>
+            {# 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={game: ' ~ game_id ~ ',checkpoint: ' ~ checkpoint.checkpoint_id ~ '}' #}
+            <td><a href="/game/{{ game_id }}/checkpoint/{{ checkpoint.checkpoint_id }}" class="btn btn-primary">Edit</a></td>
       </tr>
       {% endfor %}
     </table>
-
-    <a href="/game/{{ game_id }}/checkpoint/new" class="btn btn-success">Add New Checkpoint</a>
+{% if user_checkpoints < g.user.subscription %}
+    <a href="/game/{{ game_id }}/checkpoint/new" class="btn btn-success" data-toggle="tooltip" title="You have {{ g.user.subscription - user_checkpoints}} more checkpoints to use">Add New Checkpoint</a>
+{% else %}
+    <a href="#" class="btn btn-info" data-toggle="tooltip" title="You are using your all {{ g.user.subscription }} checkpoints!">Buy More Checkpoints</a>
+{% endif %}
+</div>
   {% endblock %}
   </body>
 </html>

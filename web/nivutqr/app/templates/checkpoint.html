@@ -9,12 +9,11 @@
         <link rel='stylesheet prefetch' href='https://cdn.jsdelivr.net/foundation/5.5.0/css/foundation.css'>
     {% endblock %}
     {% block js %}
-      <script src="https://momentjs.com/downloads/moment.min.js"></script>
-      <script type="text/javascript">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.js"></script>
+    <script type="text/javascript">
           $(document).ready(function() {
             $(document).ready(function() {
 
-                $('.save-button').on('click', save_onclick);
                 $('.cancel-button').on('click', cancel_onclick);
                 $('.edit-button').on('click', edit_onclick);
                 $('.delete-button').on('click', delete_onclick);
@@ -32,12 +31,7 @@
             function cancel_onclick(){
                 setFormMode($(this).closest("form"), 'view');
 
-                //TODO: Undo input changes?
-            }
-
-            function save_onclick(){
-                document.getElementById("checkpointForm").submit();
-                setFormMode($(this).closest("form"), 'view');
+                $(this).closest("form").find("#inputNumber").prop("value", "{{ checkpoint.number }}");
             }
 
             function delete_onclick(){
@@ -63,86 +57,100 @@
                 }
             }
         });
-
-            function validateForm() {
-                var number = document.forms["checkpointForm"]["number"].value;
-                if (number == "") {
-                    alert("Number must be filled out");
-                    return false;
-                }
-            }
     </script>
     {% endblock %}
 </head>
 <body>
 {% block main %}
-<form method="post" id="checkpointForm" onsubmit="return validateForm()">
-  <div class="row button-section">
-      <div class="large-12 columns">
-        <input type="submit" class="button small radius save-button" value="Save">
-        <a class="button small radius cancel-button">Cancel</a>
-        <a class="button small radius edit-button">Edit</a>
-        <input type="submit" class="button alert small radius delete-button" value="Delete" name="delete">
+<div class="container">
+      <ol class="breadcrumb">
+        <li><a href="{{ url_for('home') }}">My Events</a></li>
+        <li><a href="{{ url_for('run', game_id=game_id) }}">Run Event</a></li>
+        <li><a href="{{ url_for('game_checkpoints', game_id=game_id) }}">Checkpoint Manager</a></li>
+        <li class="active">Edit Checkpoint</li>
+      </ol>
+
+
+    <form method="post" id="checkpointForm" data-toggle="validator" role="form" class="form-horizontal">
+
+
+    <input id="deleteInput" name="delete" value="False" type="hidden" readonly/>
+    <input id="checkpoint_id" name="checkpoint_id" type="hidden" value="{{ checkpoint.checkpoint_id }}" readonly/>
+    <input name="game_id" type="hidden" value="{{ game_id }}" disabled="true"/>
+
+      <div class="row button-section">
+          <div class="large-12 columns">
+            <input type="submit" class="button small radius save-button btn-primary" value="Save">
+            <a class="button small radius cancel-button">Cancel</a>
+            <a class="button small radius edit-button">Edit</a>
+            <input type="submit" class="button alert small radius delete-button" value="Delete" name="delete">
+          </div>
       </div>
-  </div>
-      <div class="row">
-        <div class="small-3 columns">
-            <input id="deleteInput" name="delete" value="False" type="hidden" readonly/>
+
+      <div class="form-group">
+        <label for="inputNumber" class="col-sm-2 control-label">Checkpoint Number</label>
+        <div class="col-sm-1">
+            <input name="number" type="number" class="form-control" id="inputNumber" data-error="Value have to be a number" value="{{ checkpoint.number }}" disabled="true" required>
+        </div>
+        <div class="help-block with-errors"></div>
+      </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Start</label>
+        <div class="col-sm-3">
+            <input type="checkbox" name="is_start" disabled="true" {%- if checkpoint.is_start -%}checked{% endif %}>
         </div>
     </div>
 
-    <div class="row">
-        <div class="small-3 columns">
-          <label>ID
-            <input id="checkpoint_id" name="checkpoint_id" type="text" value="{{ checkpoint.checkpoint_id }}" readonly/>
-          </label>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Finish</label>
+        <div class="col-sm-3">
+            <input type="checkbox" name="is_finish" disabled="true" {%- if checkpoint.is_finish -%}checked{% endif %}>
         </div>
     </div>
-   <div class="control-group">
-      <div class="row">
-        <div class="small-3 columns">
-          <label>Checkpoint Number
-            <input name="number" type="text" value="{{ checkpoint.number }}" disabled="true"/>
-          </label>
+{% if is_questions %}
+        <div class="form-group">
+            <label for="inputQuestion" class="col-sm-2 control-label">Question</label>
+            <div class="col-sm-3">
+                <input name="question" type="text" class="form-control" id="inputQuestion" value="{%- if checkpoint.question != none %} {{ checkpoint.question }}{% endif %}" disabled="true">
+            </div>
         </div>
-      </div>
-  </div>
-  <div class="row">
-    <div class="large-6 columns">
-      <label>Start/Finish</label>
-      <input name="is_start" id="start" type="checkbox" disabled="true" {%- if checkpoint.is_start -%}checked{% endif %}><label for="start">Start</label>
-      <input name="is_finish" id="finish" type="checkbox" disabled="true" {%- if checkpoint.is_finish -%}checked{% endif %}><label for="finish">Finish</label>
-    </div>
-  </div>
-  <div class="row">
-    <div class="small-9 columns">
-      <label>Question
-        <input name="question" type="text" value="{{ checkpoint.question }}" disabled="true"/>
-      </label>
-    </div>
-  </div>
-
-    <div class="row">
-    <div class="large-4 columns">
-    {% if checkpoint != none %}
+    {% if checkpoint != none and checkpoint.options != none %}
         {% set list1 = checkpoint.options.split(';') %}
     {% else %}
         {% set list1 = ';;'.split(';') %}
     {% endif %}
-      <label>Options</label>
-      <input type="radio" name="options" id="first" disabled="true" value="1" {%- if checkpoint.answer == '1' -%}checked{% endif %}><input type="text" name="first_option" value="{{ list1[0] }}" disabled="true"/>
-      <input type="radio" name="options" id="second" disabled="true" value="2" {%- if checkpoint.answer == '2' -%}checked{% endif %}><input type="text" name="second_option" value="{{ list1[1] }}" disabled="true"/>
-      <input type="radio" name="options" id="third" disabled="true" value="3" {%- if checkpoint.answer == '3' -%}checked{% endif %}><input type="text" name="third_option" value="{{ list1[2] }}" disabled="true"/>
-    </div>
+        <div class="form-group">
+            <label for="first" class="col-sm-2 control-label">Answer 1</label>
+            <div class="col-sm-1">
+            <input disabled="true" class="col-sm-2" type="radio" name="options" id="first" value="1" {%- if checkpoint.answer == '1' or checkpoint == None or checkpoint.answer == None -%}checked{% endif %}>
+            </div>
+            <div class="col-sm-3">
+                <input disabled="true" type="text" class="form-control" id="first_option" name="first_option" value="{{ list1[0] }}">
+            </div>
+          </div>
+        <div class="form-group">
+            <label for="second" class="col-sm-2 control-label">Answer 2</label>
+            <div class="col-sm-1">
+            <input disabled="true" class="col-sm-2" type="radio" name="options" id="second" value="2" {%- if checkpoint.answer == '2' or checkpoint == None -%}checked{% endif %}>
+            </div>
+            <div class="col-sm-3">
+                <input disabled="true" type="text" class="form-control" id="second_option" name="second_option" value="{{ list1[1] }}">
+            </div>
+          </div>
+          <div class="form-group">
+          <label for="third" class="col-sm-2 control-label">Answer 3</label>
+            <div class="col-sm-1">
+            <input disabled="true" class="col-sm-2" type="radio" name="options" id="third" value="3" {%- if checkpoint.answer == '3' or checkpoint == None -%}checked{% endif %}>
+            </div>
+            <div class="col-sm-3">
+                <input disabled="true" type="text" class="form-control" id="third_option" name="third_option" value="{{ list1[2] }}">
+            </div>
+          </div>
+  {% endif %}
   </div>
-
-    <div class="row">
-    <div class="small-9 columns">
-        <input name="game_id" type="hidden" value="{{ game_id }}" disabled="true"/>
-    </div>
-  </div>
-
 </form>
+</div>
 
 {% endblock %}
 </body>

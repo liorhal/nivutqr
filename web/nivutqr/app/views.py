@@ -1,4 +1,6 @@
-from flask import render_template, jsonify, Response, session, request, flash, g, redirect, url_for, abort
+import pandas as pd
+from io import BytesIO
+from flask import render_template, jsonify, Response, session, request, flash, g, redirect, url_for, abort, send_file
 from flask_login import login_user, logout_user, current_user, login_required
 from sqlalchemy import true, false, func
 
@@ -26,11 +28,16 @@ def before_request():
 def register_user():
     if request.method == 'GET':
         return render_template('register.html')
-    user = User(request.form['login'] , request.form['password'])
-    db.session.add(user)
-    db.session.commit()
-    flash('User successfully registered')
-    return redirect(url_for('login'))
+    existingUsers = User.query.filter_by(login=request.form['login']).first()
+    if existingUsers:
+        flash('User ' + request.form['login'] + ' already exists')
+        return redirect(url_for('register_user'))
+    else:
+        user = User(request.form['login'] , request.form['password'])
+        db.session.add(user)
+        db.session.commit()
+        flash('User successfully registered')
+        return redirect(url_for('login'))
 
 @app.route('/')
 @login_required
@@ -42,15 +49,15 @@ def home():
     else:
         return render_template('home.html',
                                title='games',
-                               games=Game.query.filter(Game.user_id == session['user_id']).order_by(Game.game_id).all())
+                               games=Game.query.filter(Game.user_id == session['user_id']).order_by(Game.game_id).all(),
+                               errors=[])
 
 
 @app.route('/login',methods=['GET','POST'])
 @nocache
 def login():
-    print('in index, g.user: %s' % g.user)
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', errors=[])
     login = request.form['login']
     password = request.form['password']
     remember_me = False
@@ -58,10 +65,9 @@ def login():
         remember_me = True
     registered_user = User.query.filter_by(login=login,password=password).first()
     if registered_user is None:
-        flash('Username or Password is invalid' , 'error')
+        flash('Username or Password is invalid','error')
         return redirect(url_for('login'))
     login_user(registered_user, remember = remember_me)
-    flash('Logged in successfully')
     return redirect(request.args.get('next') or url_for('home'))
 
 
@@ -79,15 +85,29 @@ def about():
                            title='games',
                            games=Game.query.filter(Game.user_id == 1).order_by(Game.game_id).all())
 
+
+def validateEvent(game):
+    errors = []
+    if datetime.utcnow()>game.time_limit:
+        errors.append("The event time-limit is in the past")
+
+    return errors
+
+
 @app.route('/game/<string:game_id>/run')
+@login_required
+@nocache
 def run(game_id):
     logs = get_progress(game_id)
     results = get_game_results(game_id)
+    game = Game.query.get(game_id)
+    errors = validateEvent(game)
     return render_template('event_manager.html',
                            title='run event',
-                           game=Game.query.get(game_id),
+                           game=game,
                            results=results,
-                           logs=logs)
+                           logs=logs,
+                           errors=errors)
 
 @app.route('/game/<string:game_id>/message', methods=['POST'])
 def message(game_id):
@@ -127,8 +147,10 @@ def game(game_id):
                            title='game',
                            game=g)
 
+
 @app.route('/game/<string:game_id>/checkpoint/<string:checkpoint_id>', methods=['GET','POST'])
 def checkpoint(game_id, checkpoint_id):
+    g = Game.query.get(game_id)
     if request.method == 'POST':
         if request.form['delete'] == 'delete':
             cp = Checkpoint.query.get(checkpoint_id)
@@ -140,10 +162,11 @@ def checkpoint(game_id, checkpoint_id):
                 cp = Checkpoint()
                 db.session.add(cp)
             cp.number = request.form['number']
-            cp.question = request.form['question']
-            cp.options = ";".join(
-                (request.form['first_option'], request.form['second_option'], request.form['third_option']))
-            cp.answer = request.form['options']
+            if g.is_questions:
+                cp.question = request.form['question']
+                cp.options = ";".join(
+                    (request.form['first_option'], request.form['second_option'], request.form['third_option']))
+                cp.answer = request.form['options']
             cp.game_id = request.form['game_id']
             cp.is_start = request.form.get('is_start') == 'on'
             cp.is_finish = request.form.get('is_finish') == 'on'
@@ -152,12 +175,15 @@ def checkpoint(game_id, checkpoint_id):
     elif request.method == 'GET':
         if checkpoint_id == 'new':
             cp = None
+            is_questions = g.is_questions;
         else:
             cp = Checkpoint.query.get(checkpoint_id)
+            is_questions = g.is_questions;
         return render_template('checkpoint.html',
                                title='checkpoint',
                                checkpoint=cp,
-                               game_id=game_id)
+                               game_id=game_id,
+                               is_questions=is_questions)
 
 @app.route(
     '/game/<string:game_id>/checkpoint/<string:checkpoint_id>/participant/<string:participant_name>/answer/<string:answer>/punch/<string:punch_time>',
@@ -179,7 +205,7 @@ def punch_with_answer(game_id, checkpoint_id, participant_name, answer, punch_ti
 def punch(game_id, checkpoint_id, participant_name, punch_time):
     g = Game.query.get(game_id);
     c = Checkpoint.query.get(checkpoint_id)
-    if (g.is_questions and c.question):
+    if g.is_questions and c.question and not c.question.strip() == '':
         json = jsonify({'checkpoint': checkpoint_id,
                         'number': c.number,
                         'is_start': c.is_start,
@@ -217,27 +243,60 @@ def game_progress(game_id):
                            game=g)
 
 
+def validateCheckpoints(checkpoints):
+    errors = []
+
+    start = false
+    finish = false
+    for cp in checkpoints:
+        if cp.is_start:
+            if start == true:
+                errors.append("The event has more than one Start checkpoint.")
+            start = true
+        elif cp.is_finish:
+            if finish == true:
+                errors.append("The event has more than one Finish checkpoint.")
+            finish = true
+    if start == false:
+        errors.append("The event has no Start checkpoint.")
+    if finish == false:
+        errors.append("The event has no Finish checkpoint.")
+
+    if checkpoints.count() > checkpoints.distinct(Checkpoint.number).count():
+        errors.append("The event has multiple checkpoints with the same number.")
+    if checkpoints.count() == 0:
+        errors.append("The event has no checkpoints.")
+    return errors
+
+
 @app.route('/game/<string:game_id>/checkpoint/all')
 @login_required
 def game_checkpoints(game_id):
+    g = Game.query.get(game_id)
+    checkpoints = Checkpoint.query.filter(Checkpoint.game_id == game_id).order_by(Checkpoint.number)
+    errors = validateCheckpoints(checkpoints)
+    user_checkpoints = db.session.query(Checkpoint.checkpoint_id).join(Game, Game.game_id == Checkpoint.game_id).filter(Game.user_id == g.user.user_id).count()
+    #user_checkpoints_count = user_checkpoints.
     return render_template('checkpoints.html',
                            title='checkpoints',
-                           checkpoints=Checkpoint.query.filter(Checkpoint.game_id == game_id).order_by(
-                               Checkpoint.number),
-                           game_id=game_id)
+                           checkpoints=checkpoints,
+                           game_id=game_id,
+                           user_checkpoints=user_checkpoints,
+                           game=g,
+                           errors=errors)
 
 
 @app.route('/game/<string:game_id>/checkpoint/<string:checkpoint_id>/qr')
 @login_required
 def show_qr(game_id, checkpoint_id):
-    cp = Checkpoint.query.get(checkpoint_id);
-    prev = Checkpoint.query.filter(Checkpoint.game_id == game_id).filter(Checkpoint.number < cp.number).order_by(Checkpoint.number).first();
-    next = Checkpoint.query.filter(Checkpoint.game_id == game_id).filter(Checkpoint.number > cp.number).order_by(Checkpoint.number).first();
+    cp = Checkpoint.query.get(checkpoint_id)
+    previous_checkpoint = Checkpoint.query.filter(Checkpoint.game_id == game_id).filter(Checkpoint.number < cp.number).order_by(-Checkpoint.number).first()
+    next_checkpoint = Checkpoint.query.filter(Checkpoint.game_id == game_id).filter(Checkpoint.number > cp.number).order_by(Checkpoint.number).first()
     return render_template('qr.html',
                            title='qr',
                            checkpoint=cp,
-                           previous_checkpoint=prev,
-                           next_checkpoint=next,
+                           previous_checkpoint=previous_checkpoint,
+                           next_checkpoint=next_checkpoint,
                            game_id=game_id)
 
 def get_game_results(game_id):
@@ -269,7 +328,6 @@ def show_game_results(game_id):
 def user():
     u = User.query.get(g.user.user_id)
     if request.method == 'POST':
-        u.login = request.form['login']
         u.password = request.form['password']
         u.phone = request.form['phone']
         u.first_name = request.form['first_name']
@@ -356,13 +414,15 @@ def get_message(game_id, participant):
 @app.route('/game/<string:game_id>/participant/<string:participant>')
 @nocache
 def show_participant_progress(game_id, participant):
+    g = Game.query.get(game_id)
     cps = Checkpoint.query.with_entities(Checkpoint.checkpoint_id).filter(Checkpoint.game_id == game_id)
     logs = Log.query.filter(Log.checkpoint_id.in_(cps)).filter(Log.participant == participant).order_by(
         Log.punch_time.desc())
     return render_template('progress.html',
                            title='progress',
                            logs=logs,
-                           participant=participant)
+                           participant=participant,
+                           game=g)
 
 
 ###
@@ -374,6 +434,33 @@ def send_text_file(file_name):
     """Send your static text file."""
     file_dot_text = file_name + '.json'
     return app.send_static_file(file_dot_text)
+
+@app.route('/game/<string:game_id>/results/export')
+@app.route('/game/<string:game_id>/progress/export')
+def export(game_id):
+    # create a random Pandas dataframe
+    results = get_game_results(game_id)
+    df_1 = pd.read_sql(results.statement, results.session.bind)
+
+    progress = get_progress(game_id)
+    df_2 = pd.read_sql(progress.statement, progress.session.bind)
+
+    # create an output stream
+    output = BytesIO()
+    writer = pd.ExcelWriter(output)
+
+    # taken from the original question
+    df_1.to_excel(writer, startrow=0, merge_cells=False, sheet_name="Results")
+    df_2.to_excel(writer, startrow=0, merge_cells=False, sheet_name="Progress")
+
+    # the writer has done its job
+    writer.close()
+
+    # go back to the beginning of the stream
+    output.seek(0)
+
+    # finally return the file
+    return send_file(output, attachment_filename="results.xlsx", as_attachment=True)
 
 
 @app.after_request
